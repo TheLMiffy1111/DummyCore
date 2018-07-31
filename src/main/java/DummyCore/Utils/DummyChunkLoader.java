@@ -18,7 +18,7 @@ import net.minecraftforge.common.ForgeChunkManager.Type;
 import net.minecraftforge.common.util.Constants.NBT;
 
 /**
- * 
+ *
  * @author Yun-Chian
  * Based on Mekanism's chunk loading
  */
@@ -96,7 +96,7 @@ public class DummyChunkLoader {
 	 * Call this in update()
 	 */
 	public void tick() {
-		if(!tileEntity.getWorld().isRemote) {			
+		if(!tileEntity.getWorld().isRemote) {
 			if(prevCoord == null || !prevCoord.equals(new Coord4D(tileEntity))) {
 				release();
 				prevCoord = new Coord4D(tileEntity);

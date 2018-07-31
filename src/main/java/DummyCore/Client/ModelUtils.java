@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Some methods to help with model registering
  * @author TheLMiffy1111
- * 
+ *
  */
 public class ModelUtils {
 	public static final ArrayList<Pair<IBlockColor,Block>> BLOCK_COLORS = new ArrayList<Pair<IBlockColor,Block>>();
@@ -36,26 +36,26 @@ public class ModelUtils {
 		for(Pair<IItemColor,Item> i : ITEM_COLORS)
 			Minecraft.getMinecraft().getItemColors().registerItemColorHandler(i.getLeft().toMCItemColor(), i.getRight());
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param mrl
 	 * @param ibm
 	 */
 	public static void registerModel(ModelResourceLocation mrl, IBakedModel ibm) {
 		MODELS.add(Pair.<ModelResourceLocation,IBakedModel>of(mrl, ibm));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 */
 	public static void setItemModelInventory(Item item) {
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().getResourceDomain()+":item/"+item.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName().getResourceDomain()+":item/"+item.getRegistryName().getResourcePath(), "inventory"));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param list
 	 */
@@ -64,9 +64,9 @@ public class ModelUtils {
 			ModelLoader.setCustomModelResourceLocation(item, pair.getLeft().intValue(), pair.getRight());
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param maxMeta
 	 * @param func
@@ -77,17 +77,17 @@ public class ModelUtils {
 				ModelLoader.setCustomModelResourceLocation(item, i, func.apply(i));
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param block
 	 */
 	public static void setBlockModelInventory(Block block) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName().getResourceDomain()+':'+block.getRegistryName(), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param block
 	 * @param list
 	 */
@@ -96,9 +96,9 @@ public class ModelUtils {
 			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), pair.getLeft().intValue(), pair.getRight());
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param block
 	 * @param maxMeta
 	 * @param func
@@ -109,9 +109,9 @@ public class ModelUtils {
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), i, func.apply(i));
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param args
 	 */
@@ -120,9 +120,9 @@ public class ModelUtils {
 		ModelLoader.setCustomMeshDefinition(item, mesh);
 		ModelBakery.registerItemVariants(item, mesh.location);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param args
 	 */
@@ -131,9 +131,9 @@ public class ModelUtils {
 		ModelLoader.setCustomMeshDefinition(item, mesh);
 		ModelBakery.registerItemVariants(item, mesh.location);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param args
 	 */
@@ -142,9 +142,9 @@ public class ModelUtils {
 		ModelLoader.setCustomMeshDefinition(item, mesh);
 		ModelBakery.registerItemVariants(item, mesh.location);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param args
 	 */
@@ -153,12 +153,12 @@ public class ModelUtils {
 		ModelLoader.setCustomMeshDefinition(item, mesh);
 		ModelBakery.registerItemVariants(item, mesh.location);
 	}
-	
+
 	public static class MeshDefinitionSingleIcon implements ItemMeshDefinition {
 		public String name;
 		public String variant;
 		public ModelResourceLocation location;
-		
+
 		public MeshDefinitionSingleIcon(String... args) {
 			if(args.length == 1) {
 				name = args[0];
@@ -177,23 +177,23 @@ public class ModelUtils {
 			}
 			location = new ModelResourceLocation(name, variant);
 		}
-		
+
 		public MeshDefinitionSingleIcon(ModelResourceLocation mrl) {
 			location = mrl;
 			name = mrl.getResourceDomain()+':'+mrl.getResourcePath();
 			variant = mrl.getVariant();
 		}
-		
+
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack) {
 			return location;
 		}
 	}
-	
+
 	public static class MeshDefinitionNBTActive implements ItemMeshDefinition {
 		public String name;
 		public ModelResourceLocation[] location = new ModelResourceLocation[2];
-		
+
 		public MeshDefinitionNBTActive(String... args) {
 			if(args.length == 1) {
 				name = args[0];
@@ -207,13 +207,13 @@ public class ModelUtils {
 			location[0] = new ModelResourceLocation(name, "active=false");
 			location[1] = new ModelResourceLocation(name, "active=true");
 		}
-		
+
 		public MeshDefinitionNBTActive(ResourceLocation rl) {
 			location[0] = new ModelResourceLocation(rl, "active=false");
 			location[1] = new ModelResourceLocation(rl, "active=true");
 			name = rl.toString();
 		}
-		
+
 		@Override
 		public ModelResourceLocation getModelLocation(ItemStack stack) {
 			return stack.getTagCompound() != null && stack.getTagCompound().getBoolean("active") ? location[1] : location[0];

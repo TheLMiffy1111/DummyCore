@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @version From DummyCore 1.0
  * @author Modbder
- * Internal. Used to work with Items. 
+ * Internal. Used to work with Items.
  */
 public final class CreativePageItems extends CreativeTabs{
 	public int delayTime = 0;
@@ -32,32 +32,23 @@ public final class CreativePageItems extends CreativeTabs{
 	}
 
 	@Override
-	public ItemStack getIconItemStack()
-	{
+	public ItemStack getIconItemStack() {
 		if(!overrideDisplayStack.isEmpty())
 			return overrideDisplayStack;
 		CoreInitialiser.proxy.choseDisplayStack(this);
 		return this.displayStack;
 	}
 
-	public List<ItemStack> initialiseItemsList()
-	{
+	public List<ItemStack> initialiseItemsList() {
 		++tries;
-		if(this.itemList.isEmpty() && tries <= 1)
-		{
-			for(int t = 0; t < Item.REGISTRY.getKeys().size(); ++t)
-			{
-				Item itm = (Item) Item.getByNameOrId(((ResourceLocation) Item.REGISTRY.getKeys().toArray()[t]).toString());
-				if(itm != null && itm.getCreativeTab() == this)
-				{
+		if(this.itemList.isEmpty() && tries <= 1) {
+			for(Item itm : Item.REGISTRY) {
+				if(itm != null && itm.getCreativeTab() == this) {
 					NonNullList<ItemStack> lst = NonNullList.<ItemStack>create();
 					itm.getSubItems(this,lst);
-					if(!lst.isEmpty())
-					{
-						for(ItemStack stk : lst)
-						{
-							if(!stk.isEmpty())
-							{
+					if(!lst.isEmpty()) {
+						for(ItemStack stk : lst) {
+							if(!stk.isEmpty()) {
 								this.itemList.add(stk);
 							}
 						}
@@ -72,8 +63,7 @@ public final class CreativePageItems extends CreativeTabs{
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public String getTranslatedTabLabel()
-	{
+	public String getTranslatedTabLabel() {
 		return this.tabLabel;
 	}
 

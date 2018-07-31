@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.UUID;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -20,40 +21,36 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.4
  * @Description used to store any String for players/worlds in the world save folder and get it.
  */
 public class DummyDataUtils {
 	private static NBTTagCompound globalConfig;
-	private static Hashtable<String,File> playerFiles = new Hashtable<String,File>();
-	private static Hashtable<String,NBTTagCompound> playerConfigs = new Hashtable<String,NBTTagCompound>();
+	private static HashMap<UUID, File> playerFiles = new HashMap<UUID, File>();
+	private static HashMap<UUID, NBTTagCompound> playerConfigs = new HashMap<UUID, NBTTagCompound>();
 	private static String getPath;
 	private static boolean isWorking;
 	private static File directory;
 	private static final Class<DummyDataUtils> clazz = DummyDataUtils.class;
-	
+
 	/**
 	 * A new version of world loads, better server compatibilities.
 	 */
 	@SubscribeEvent
-	public void serverWorldLoad(WorldEvent.Load event)
-	{
-		try
-		{
+	public void serverWorldLoad(WorldEvent.Load event) {
+		try {
 			World w = event.getWorld();
-			if(w != null && !w.isRemote && w.provider != null && w.provider.getDimension() == 0)
-			{
+			if(w != null && !w.isRemote && w.provider != null && w.provider.getDimension() == 0) {
 				File f = event.getWorld().getSaveHandler().getWorldDirectory();
-				if(f != null)
-				{
+				if(f != null) {
 					String fPath = f.getAbsolutePath();
 					String dDataPath = fPath+"//DummyData//";
 					directory = new File(dDataPath);
 					directory.mkdirs();
 					File globalDataDat = new File(directory+"//GlobalData.ddat");
-					
+
 					File f1 = new File(directory+"//PlayerData//");
 					f1.mkdirs();
 					getPath = dDataPath;
@@ -61,23 +58,19 @@ public class DummyDataUtils {
 					isWorking = true;
 				}
 			}
-		}catch(Exception e)
-		{
+		}
+		catch(Exception e) {
 			Notifier.notifyCustomMod("DummyCore", "Error loading DummyData!");e.printStackTrace();return;
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void serverWorldSave(WorldEvent.Save event)
-	{
-		try
-		{
+	public void serverWorldSave(WorldEvent.Save event) {
+		try {
 			World w = event.getWorld();
-			if(w != null && !w.isRemote && w.provider != null && w.provider.getDimension() == 0)
-			{
+			if(w != null && !w.isRemote && w.provider != null && w.provider.getDimension() == 0) {
 				File f = event.getWorld().getSaveHandler().getWorldDirectory();
-				if(f != null)
-				{
+				if(f != null) {
 					String fPath = f.getAbsolutePath();
 					String dDataPath = fPath+"//DummyData//";
 					directory = new File(dDataPath);
@@ -86,210 +79,166 @@ public class DummyDataUtils {
 					saveGlobalTag(globalDataDat);
 				}
 			}
-		}catch(Exception e)
-		{
-			Notifier.notifyCustomMod("DummyCore", "Error loading DummyData!");e.printStackTrace();return;
+		}
+		catch(Exception e) {
+			Notifier.notifyCustomMod("DummyCore", "Error loading DummyData!");
+			e.printStackTrace();
+			return;
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void playerLoad(LoadFromFile event)
-	{
-		if(!event.getEntityPlayer().world.isRemote)
-		{
+	public void playerLoad(LoadFromFile event) {
+		if(!event.getEntityPlayer().world.isRemote) {
 			EntityPlayer player = event.getEntityPlayer();
 			boolean exists = true;
-			File playerFile = getDataFileForPlayer(player.getGameProfile().getId().toString());
-			if(playerFile.isDirectory())
-			{
+			File playerFile = getDataFileForPlayer(player.getGameProfile().getId());
+			if(playerFile.isDirectory()) {
 				restoreFileFromDir(playerFile);
 				exists = false;
 			}
-			
-			if(!playerFile.exists())
-			{
+			if(!playerFile.exists()) {
 				exists = false;
 				createFile(playerFile);
 			}
-			
-			if(exists)
-			{
+			if(exists) {
 				NBTTagCompound tag = loadNBTFromFile(playerFile);
-				playerConfigs.put(player.getGameProfile().getId().toString(), tag);
-			}else
-			{
-				playerConfigs.put(player.getGameProfile().getId().toString(), new NBTTagCompound());
+				playerConfigs.put(player.getGameProfile().getId(), tag);
+			}
+			else {
+				playerConfigs.put(player.getGameProfile().getId(), new NBTTagCompound());
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void playerSave(SaveToFile event)
-	{
-		if(!event.getEntityPlayer().world.isRemote)
-		{
+	public void playerSave(SaveToFile event) {
+		if(!event.getEntityPlayer().world.isRemote) {
 			EntityPlayer player = event.getEntityPlayer();
-			File playerFile = getDataFileForPlayer(player.getGameProfile().getId().toString());
-			if(playerFile.isDirectory())
+			File playerFile = getDataFileForPlayer(player.getGameProfile().getId());
+			if(playerFile.isDirectory()) {
 				restoreFileFromDir(playerFile);
-			
-			if(!playerFile.exists())
+			}
+			if(!playerFile.exists()) {
 				createFile(playerFile);
-			
-			writeNBTToFile(globalConfig,playerFile);
+			}
+			writeNBTToFile(globalConfig, playerFile);
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void playerLogOut(PlayerLoggedOutEvent event)
-	{
-		if(!event.player.world.isRemote)
-		{
-			playerFiles.remove(event.player.getGameProfile().getId().toString());
-			playerConfigs.remove(event.player.getGameProfile().getId().toString());
+	public void playerLogOut(PlayerLoggedOutEvent event) {
+		if(!event.player.world.isRemote) {
+			playerFiles.remove(event.player.getGameProfile().getId());
+			playerConfigs.remove(event.player.getGameProfile().getId());
 		}
 	}
-	
-	private static void saveGlobalTag(File file)
-	{
-		if(file.isDirectory())
+
+	private static void saveGlobalTag(File file) {
+		if(file.isDirectory()) {
 			restoreFileFromDir(file);
-		
-		if(!file.exists())
+		}
+		if(!file.exists()) {
 			createFile(file);
-		writeNBTToFile(globalConfig,file);
+		}
+		writeNBTToFile(globalConfig, file);
 	}
-	
-	
-	private static void writeNBTToFile(NBTTagCompound tag, File file)
-	{
-		try
-		{
+
+	private static void writeNBTToFile(NBTTagCompound tag, File file) {
+		try {
 			FileOutputStream oStream = new FileOutputStream(file);
-			try
-			{
+			try {
 				CompressedStreamTools.writeCompressed(tag, oStream);
 			}
-			catch(IOException ioe)
-			{
+			catch(IOException ioe) {
 				LoadingUtils.makeACrash(file+" appears to be damaged, either fix it or delete it!", clazz, ioe, false);
 			}
-			finally
-			{
+			finally {
 				oStream.close();
 			}
 		}
-		catch(FileNotFoundException fnfe)
-		{
-			LoadingUtils.makeACrash(file+" does not exists. This is an impossible error and should be reported as soon as possible", clazz, fnfe, true);
+		catch(FileNotFoundException fnfe) {
+			LoadingUtils.makeACrash(file+" does not exist. This is an impossible error and should be reported as soon as possible.", clazz, fnfe, true);
 		}
-		catch(SecurityException se)
-		{
-			LoadingUtils.makeACrash(file+" Can't be accessed by Java, check your anti-virus and file privelleges!", clazz, se, true);
+		catch(SecurityException se) {
+			LoadingUtils.makeACrash(file+" can't be accessed by Java, check your anti-virus and file privileges!", clazz, se, true);
 		}
-		catch(IOException ioe)
-		{
-			LoadingUtils.makeACrash(file+" Can't be created, check your file system!", clazz, ioe, true);
+		catch(IOException ioe) {
+			LoadingUtils.makeACrash(file+" can't be created, check your file system!", clazz, ioe, true);
 		}
 	}
-	
-	private static void restoreFileFromDir(File file)
-	{
-		Notifier.notifyError(file+" Is a directory, and should not be. Trying to resolve the issue...");
-		try
-		{
+
+	private static void restoreFileFromDir(File file) {
+		Notifier.notifyError(file+" is a directory, and should not be. Trying to resolve the issue...");
+		try {
 			file.delete();
 			file.createNewFile();
 		}
-		catch(IOException ioe)
-		{
-			LoadingUtils.makeACrash(file+" Can't be created, check your file system!", clazz, ioe, true);
+		catch(IOException ioe) {
+			LoadingUtils.makeACrash(file+" can't be created, check your file system!", clazz, ioe, true);
 		}
-		catch(SecurityException se)
-		{
-			LoadingUtils.makeACrash(file+" Can't be accessed by Java, check your anti-virus and file privelleges!", clazz, se, true);
+		catch(SecurityException se) {
+			LoadingUtils.makeACrash(file+" can't be accessed by Java, check your anti-virus and file privileges!", clazz, se, true);
 		}
 	}
-	
-	private static void createFile(File file)
-	{
-		try
-		{
+
+	private static void createFile(File file) {
+		try {
 			file.createNewFile();
 		}
-		catch(IOException ioe)
-		{
-			LoadingUtils.makeACrash(file+" Can't be created, check your file system!", clazz, ioe, true);
+		catch(IOException ioe) {
+			LoadingUtils.makeACrash(file+" can't be created, check your file system!", clazz, ioe, true);
 		}
-		catch(SecurityException se)
-		{
-			LoadingUtils.makeACrash(file+" Can't be accessed by Java, check your anti-virus and file privelleges!", clazz, se, true);
+		catch(SecurityException se) {
+			LoadingUtils.makeACrash(file+" can't be accessed by Java, check your anti-virus and file privileges!", clazz, se, true);
 		}
 	}
-	
-	private static NBTTagCompound createOrLoadTag(File file)
-	{
+
+	private static NBTTagCompound createOrLoadTag(File file) {
 		NBTTagCompound tag = new NBTTagCompound();
-		
 		boolean exists = true;
-		if(file.isDirectory())
-		{
+		if(file.isDirectory()) {
 			restoreFileFromDir(file);
 			exists = false;
 		}
-		
-		if(!file.exists())
-		{
+		if(!file.exists()) {
 			exists = false;
 			createFile(file);
 		}
-		
-		if(exists)
-		{
+		if(exists) {
 			tag = loadNBTFromFile(file);
 		}
-		
 		return tag;
 	}
-	
-	private static NBTTagCompound loadNBTFromFile(File file)
-	{
-		try
-		{
+
+	private static NBTTagCompound loadNBTFromFile(File file) {
+		try {
 			FileInputStream iStream = new FileInputStream(file);
-			try
-			{
+			try {
 				NBTTagCompound tag = CompressedStreamTools.readCompressed(iStream);
 				return tag;
 			}
-			catch(IOException ioe)
-			{
+			catch(IOException ioe) {
 				LoadingUtils.makeACrash(file+" appears to be damaged, either fix it or delete it!", clazz, ioe, false);
 			}
-			
-			finally
-			{
+			finally {
 				iStream.close();
 			}
 		}
-		catch(FileNotFoundException fnfe)
-		{
+		catch(FileNotFoundException fnfe) {
 			LoadingUtils.makeACrash(file+" does not exists. This is an impossible error and should be reported as soon as possible", clazz, fnfe, true);
 		}
-		catch(SecurityException se)
-		{
-			LoadingUtils.makeACrash(file+" Can't be accessed by Java, check your anti-virus and file privelleges!", clazz, se, true);
+		catch(SecurityException se) {
+			LoadingUtils.makeACrash(file+" can't be accessed by Java, check your anti-virus and file privileges!", clazz, se, true);
 		}
-		catch(IOException ioe)
-		{
-			LoadingUtils.makeACrash(file+" Can't be created, check your file system!", clazz, ioe, true);
+		catch(IOException ioe) {
+			LoadingUtils.makeACrash(file+" can't be created, check your file system!", clazz, ioe, true);
 		}
-		
+
 		return new NBTTagCompound();
 	}
-	
-	public static void stop()
-	{
+
+	public static void stop() {
 		globalConfig = null;
 		playerFiles.clear();
 		playerConfigs.clear();
@@ -301,39 +250,27 @@ public class DummyDataUtils {
 		MiscUtils.registeredServerData.clear();
 		MiscUtils.registeredServerWorldData.clear();
 	}
-	
-	private static File getDataFileForPlayer(String playerName)
-	{
-		if(!playerFiles.containsKey(playerName))
-		{
-			File ret = new File(getPath+"/PlayerData/"+playerName+".ddat");
-			if(!ret.exists())
-				try {
-					ret.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-					return null;
-				}
-			playerFiles.put(playerName, ret);
+
+	private static File getDataFileForPlayer(UUID uuid) {
+		if(!playerFiles.containsKey(uuid)) {
+			File ret = new File(getPath+"/PlayerData/"+uuid+".ddat");
+			playerFiles.put(uuid, ret);
 			return ret;
 		}
-		
-		return playerFiles.get(playerName);
-		
+		return playerFiles.get(uuid);
+
 	}
-	
-	private static NBTTagCompound getDataConfigForPlayer(String playerName)
-	{
-		if(!canWorkWithData())
+
+	private static NBTTagCompound getDataConfigForPlayer(UUID playerName) {
+		if(!canWorkWithData()) {
 			return null;
-		
-		if(!playerConfigs.containsKey(playerName))
-		{
+		}
+		if(!playerConfigs.containsKey(playerName)) {
 			playerConfigs.put(playerName, createOrLoadTag(playerFiles.get(playerName)));
 		}
 		return playerConfigs.get(playerName);
 	}
-	
+
 	/**
 	 * Writes the given String to the GlobalData.ddat file with the key of dataName
 	 * @version From DummyCore 1.4
@@ -341,90 +278,84 @@ public class DummyDataUtils {
 	 * @param dataName - key of the data
 	 * @param dataString - data to store
 	 */
-	public static void writeCustomDataForMod(String modid, String dataName, String dataString)
-	{
+	public static void writeCustomDataForMod(String modid, String dataName, String dataString) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			MiscUtils.registeredClientWorldData.put(modid+"|"+dataName, dataString);
-		}else
-		{
-			if(!canWorkWithData())return;
+		}
+		else {
+			if(!canWorkWithData()) {
+				return;
+			}
 			globalConfig.setString(modid+"|"+dataName,dataString);
 			MiscUtils.registeredServerWorldData.put(modid+"|"+dataName, dataString);
 			syncGlobalDataToClient(modid, dataName);
 		}
 	}
-	
-	public static void loadCustomDataForMod(String modid, String dataName)
-	{
+
+	public static void loadCustomDataForMod(String modid, String dataName) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return;
 		}
-		
-		if(!canWorkWithData())
+		if(!canWorkWithData()) {
 			return;
-		
+		}
 		MiscUtils.registeredServerWorldData.put(modid+"|"+dataName, globalConfig.getString(modid+"|"+dataName));
 		syncGlobalDataToClient(modid, dataName);
 	}
-	
-	public static void loadGlobalDataForMod(String modid)
-	{
+
+	public static void loadGlobalDataForMod(String modid) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return;
 		}
-		if(!canWorkWithData())
+		if(!canWorkWithData()) {
 			return;
-		
+		}
 		MiscUtils.registeredServerWorldData.put(modid+"|"+modid, globalConfig.getString(modid+"|"+modid));
 		syncGlobalDataToClient(modid, modid);
 	}
-	
+
 	/**
 	 * Writes the given String to the GlobalData.ddat file with the key of modid
 	 * @version From DummyCore 1.4
 	 * @param modid - the id of your mod
 	 * @param dataString - data to store
 	 */
-	public static void writeGlobalDataForMod(String modid, String dataString)
-	{
+	public static void writeGlobalDataForMod(String modid, String dataString) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			MiscUtils.registeredClientWorldData.put(modid+"|"+modid, dataString);
-		}else
-		{
-			if(!canWorkWithData())return;
+		}
+		else {
+			if(!canWorkWithData()) {
+				return;
+			}
 			globalConfig.setString(modid+"|"+modid, dataString);
 			MiscUtils.registeredServerWorldData.put(modid+"|"+modid, dataString);
 			syncGlobalDataToClient(modid);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns the String from the GlobalData.ddat file with the key of modid
 	 * @version From DummyCore 1.4
 	 * @param modid - the id of your mod
 	 * @return a string with the data, written to the ddat file. Returns "no data" if none was found
 	 */
-	public static String getGlobalDataForMod(String modid)
-	{
+	public static String getGlobalDataForMod(String modid) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return MiscUtils.registeredClientWorldData.get(modid+"|"+modid);
 		}
-		if(!MiscUtils.registeredServerWorldData.containsKey(modid+"|"+modid))
+		if(!MiscUtils.registeredServerWorldData.containsKey(modid+"|"+modid)) {
 			loadGlobalDataForMod(modid);
+		}
 		return MiscUtils.registeredServerWorldData.get(modid+"|"+modid);
 	}
-	
+
 	/**
 	 * Returns the String from the GlobalData.ddat file with the custom key
 	 * @version From DummyCore 1.4
@@ -432,18 +363,17 @@ public class DummyDataUtils {
 	 * @param dataName - key of the data
 	 * @return a string with the data, written to the ddat file. Returns "no data" if none was found
 	 */
-	public static String getCustomDataForMod(String modid, String dataName)
-	{
+	public static String getCustomDataForMod(String modid, String dataName) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return MiscUtils.registeredClientWorldData.get(modid+"|"+dataName);
 		}
-		if(!MiscUtils.registeredServerWorldData.containsKey(modid+"|"+dataName))
+		if(!MiscUtils.registeredServerWorldData.containsKey(modid+"|"+dataName)) {
 			loadCustomDataForMod(modid,dataName);
+		}
 		return MiscUtils.registeredServerWorldData.get(modid+"|"+dataName);
 	}
-	
+
 	/**
 	 * Sets the given data to the ddat file of the player with given name.
 	 * @version From DummyCore 1.4
@@ -452,37 +382,36 @@ public class DummyDataUtils {
 	 * @param dataName - key of the data
 	 * @param dataValue - the data to store
 	 */
-	public static void setDataForPlayer(String playerName, String modid, String dataName, String dataValue)
-	{
+	public static void setDataForPlayer(String playerName, String modid, String dataName, String dataValue) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			MiscUtils.registeredClientData.put(playerName+"_"+modid+"|"+dataName, dataValue);
-		}else
-		{
-			if(!canWorkWithData())
+		}
+		else {
+			if(!canWorkWithData()) {
 				return;
-			NBTTagCompound tag = getDataConfigForPlayer(playerName);
+			}
+			NBTTagCompound tag = getDataConfigForPlayer(UUID.fromString(playerName));
 			tag.setString(modid+"|"+dataName, dataValue);
 			MiscUtils.registeredServerData.put(playerName+"_"+modid+"|"+dataName, dataValue);
 			syncPlayerDataToClient(playerName, modid, dataName);
 		}
 	}
-	
-	public static void loadPlayerDataForMod(String playerName, String modid, String dataName)
-	{
+
+	public static void loadPlayerDataForMod(String playerName, String modid, String dataName) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return;
 		}
-		if(!canWorkWithData())return;
-		NBTTagCompound tag = getDataConfigForPlayer(playerName);
+		if(!canWorkWithData()) {
+			return;
+		}
+		NBTTagCompound tag = getDataConfigForPlayer(UUID.fromString(playerName));
 		MiscUtils.registeredServerData.put(playerName+"_"+modid+"|"+dataName, tag.getString(modid+"|"+dataName));
 		syncPlayerDataToClient(playerName, modid, dataName);
 	}
-	
-	
+
+
 	/**
 	 * Returns the String from the ddat file of the given player with the custom key
 	 * @version From DummyCore 1.4
@@ -491,41 +420,35 @@ public class DummyDataUtils {
 	 * @param dataName - key of the data
 	 * @return a string with the data, written to the ddat file. Returns "no data" if none was found
 	 */
-	public static String getDataForPlayer(String playerName, String modid, String dataName)
-	{
+	public static String getDataForPlayer(String playerName, String modid, String dataName) {
 		Side s = FMLCommonHandler.instance().getEffectiveSide();
-		if(s == Side.CLIENT)
-		{
+		if(s == Side.CLIENT) {
 			return MiscUtils.registeredClientData.get(playerName+"_"+modid+"|"+dataName);
 		}
-		if(!MiscUtils.registeredServerData.containsKey(playerName+"_"+modid+"|"+dataName))
+		if(!MiscUtils.registeredServerData.containsKey(playerName+"_"+modid+"|"+dataName)) {
 			loadPlayerDataForMod(playerName, modid, dataName);
+		}
 		return MiscUtils.registeredServerData.get(playerName+"_"+modid+"|"+dataName);
 	}
-	
+
 	/**
 	 * Used to check, if current world exists(for example, if the player is in the main menu returns false)
 	 * @version From DummyCore 1.4
 	 * @return True, if there is a running world, false if not.
 	 */
-	public static boolean canWorkWithData()
-	{
+	public static boolean canWorkWithData() {
 		return isWorking;
 	}
-	
-	public static void syncGlobalDataToClient(String modid, String dataName)
-	{
+
+	public static void syncGlobalDataToClient(String modid, String dataName) {
 		SyncUtils.addRequiresSync(modid, dataName);
 	}
-	
-	public static void syncGlobalDataToClient(String modid)
-	{
+
+	public static void syncGlobalDataToClient(String modid) {
 		SyncUtils.addRequiresSync(modid, modid);
 	}
-	
-	public static void syncPlayerDataToClient(String playerName, String modid, String dataName)
-	{
+
+	public static void syncPlayerDataToClient(String playerName, String modid, String dataName) {
 		SyncUtils.addRequiresSync(playerName, modid, dataName);
 	}
-
 }

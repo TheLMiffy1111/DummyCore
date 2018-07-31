@@ -17,14 +17,14 @@ public class GuiButton_ChangeGUI extends GuiButton{
 	public GuiButton_ChangeGUI(int p_i1021_1_, int p_i1021_2_, int p_i1021_3_,int p_i1021_4_, int p_i1021_5_, String p_i1021_6_) {
 		super(p_i1021_1_, p_i1021_2_, p_i1021_3_, p_i1021_4_, p_i1021_5_, p_i1021_6_);
 	}
-	
+
 	@Override
-    public void playPressSound(SoundHandler p_146113_1_)
-    {
+	public void playPressSound(SoundHandler p_146113_1_)
+	{
 		if(!(Minecraft.getMinecraft().currentScreen instanceof GuiMainMenu))
 			return;
 		p_146113_1_.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		Minecraft.getMinecraft().displayGuiScreen(new GuiMenuList(Minecraft.getMinecraft().currentScreen));
-    }
+	}
 
 }

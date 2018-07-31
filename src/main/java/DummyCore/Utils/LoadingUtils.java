@@ -31,6 +31,8 @@ public class LoadingUtils {
 
 		if(shutdown)
 			FMLCommonHandler.instance().getSidedDelegate().haltGame(message, t);
+		else
+			t.printStackTrace();
 	}
 
 	public static void makeACrash(String message,Throwable t, boolean shutdown) {
@@ -43,6 +45,8 @@ public class LoadingUtils {
 
 		if(shutdown)
 			FMLCommonHandler.instance().getSidedDelegate().haltGame(message, t);
+		else
+			t.printStackTrace();
 	}
 
 	public static Class<?>[] tryDetermineOffendorsFromTrace(Throwable t) {

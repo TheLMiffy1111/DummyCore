@@ -33,118 +33,105 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  */
 public class MainMenuRegistry {
-	
+
 	public static List<Class<? extends GuiScreen>> menuList = new ArrayList<Class<? extends GuiScreen>>();
 	public static List<NBTTagCompound> tagsToMenu = new ArrayList<NBTTagCompound>();
-	
+
 	public static List<DummyData> menuInfoLst = new ArrayList<DummyData>();
-	
+
 	public static boolean isGuiDisplayed;
-	
+
 	public static GuiScreen currentScreen;
-	
+
 	public static Class<MainMenuRegistry> clazz = MainMenuRegistry.class;
-	
+
 	/**
 	 * Registers your menu using DC main menu registry system.
 	 * @param menu - the CLASS of your menu. The object will be created when needed. Your class must have an empty constructor(with no params)!
 	 */
-	public static void registerNewGui(Class<? extends GuiScreen> menu)
-	{
-		if(IMainMenu.class.isAssignableFrom(menu))
-		{
+	public static void registerNewGui(Class<? extends GuiScreen> menu) {
+		if(IMainMenu.class.isAssignableFrom(menu)) {
 			menuList.add(menu);
 			menuInfoLst.add(new DummyData(menu.getName(),"No description provided by author ;("));
-		}else
-		{
+		}
+		else {
 			Notifier.notifyCustomMod("DummyCore", "Attempting to register "+menu+" as a main menu, but the registered object does not implements IMainMenu!");
 		}
 	}
-	
+
 	/**
 	 * Registers your menu using DC main menu registry system.
 	 * @param menu - the CLASS of your menu. The object will be created when needed. Your class must have an empty constructor(with no params)!
 	 * @param name - the name of your menu that will be displayed in the menu list
 	 * @param description - the description of your menu that will be displayed when your menu is selected
 	 */
-	public static void registerNewGui(Class<? extends GuiScreen> menu, String name, String description)
-	{
-		if(IMainMenu.class.isAssignableFrom(menu))
-		{
+	public static void registerNewGui(Class<? extends GuiScreen> menu, String name, String description) {
+		if(IMainMenu.class.isAssignableFrom(menu)) {
 			menuList.add(menu);
 			menuInfoLst.add(new DummyData(name,description));
-		}else
-		{
+		}
+		else {
 			Notifier.notifyCustomMod("DummyCore", "Attempting to register "+menu+" as a main menu, but the registered object does not implements IMainMenu!");
 		}
 	}
-	
+
 	/**
 	 * Internal.
 	 * @param index
 	 */
-	public static void newMainMenu(int index)
-	{
-		try
-		{
-			if(menuList.size() < index)
-			{
+	public static void newMainMenu(int index) {
+		try {
+			if(menuList.size() <= index) {
 				index = menuList.size()-1;
 			}
 			DummyConfig.setMainMenu(index);
 			currentScreen = menuList.get(DummyConfig.getMainMenu()).newInstance();
 			Minecraft.getMinecraft().displayGuiScreen(currentScreen);
-		}catch(Exception e)
-		{
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
 	}
-	
+
 	/**
 	 * Gets the current OBJECT displayed as the main menu
 	 * @return The current OBJECT displayed as the main menu
 	 */
-	public static GuiScreen getGuiDisplayed()
-	{
+	public static GuiScreen getGuiDisplayed() {
 		Minecraft mc = Minecraft.getMinecraft();
 		if(mc.currentScreen != null && mc.currentScreen.getClass() != GuiMainMenu.class && mc.currentScreen instanceof IMainMenu)
 			return mc.currentScreen;
 		if(currentScreen != null)
 			return currentScreen;
-		try 
-		{
+		try {
 			return menuList.get(DummyConfig.getMainMenu()).newInstance();
 		}
-		catch (Exception e)
-		{
+		catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Internal. 
+	 * Internal.
 	 */
-	public static void registerMenuConfigs()
-	{
+	public static void registerMenuConfigs() {
 		Iterator<NBTTagCompound> $i = tagsToMenu.iterator();
-		while($i.hasNext())
-		{
+		while($i.hasNext()) {
 			NBTTagCompound tag = $i.next();
 			registerNewGui(GuiMainMenuNBT.class,tag.getString("menuName"),tag.getString("menuDesc"));
 			GuiMainMenuNBT.idToTagMapping.put(menuList.size()-1, tag);
 		}
 		tagsToMenu.clear();
 	}
-	
+
 	/**
 	 * Internal. Creates a help.txt file for NBT based menu system
 	 * @param dir
 	 * @throws IOException
 	 */
-	public static void createHelpFile(File dir) throws IOException
-	{
+	public static void createHelpFile(File dir) throws IOException {
 		dir.mkdirs();
 		File txtFile = new File(dir,"help.txt");
 		if(!txtFile.exists())
@@ -507,14 +494,12 @@ public class MainMenuRegistry {
 		pw.flush();
 		pw.close();
 	}
-	
+
 	/**
 	 * Internal. Finds all possible NBT based menu entries in the config folder
 	 */
-	public static void initMenuConfigs()
-	{
-		try
-		{
+	public static void initMenuConfigs() {
+		try {
 			Core.mcDir = Minecraft.getMinecraft().mcDataDir;
 			File dir = new File(Core.mcDir,"config");
 			dir.mkdirs();
@@ -523,61 +508,50 @@ public class MainMenuRegistry {
 				createHelpFile(dir);
 			File[] files = dir.listFiles();
 			Iterator<File> $i = Iterators.forArray(files);
-			while($i.hasNext())
-			{
+			while($i.hasNext()) {
 				File detected = $i.next();
-				if(detected.getName().endsWith(".dcmenu"))
-				{
+				if(detected.getName().endsWith(".dcmenu")) {
 					FileInputStream fis = new FileInputStream(detected);
-					if(fis != null)
-					{
-						try
-						{
+					if(fis != null) {
+						try {
 							String st = IOUtils.toString(fis,"UTF-8");
 							NBTTagCompound tag = JsonToNBT.getTagFromJson(st);
-							if(validateNBT(tag))
-							{
+							if(validateNBT(tag)) {
 								tagsToMenu.add(tag);
 								Notifier.notifySimple("[MainMenuRegistry]"+detected+" Is a valid main menu and has been send to parsing queue.");
-							}else
-							{
+							}
+							else {
 								Notifier.notifyError("[MainMenuRegistry]"+detected+" Is not a valid menu!");
 							}
 						}
-						catch(IOException ioe)
-						{
+						catch(IOException ioe) {
 							LoadingUtils.makeACrash("[MainMenuRegistry]Couldn't read file "+detected, clazz, ioe, false);
 						}
-						catch(UnsupportedCharsetException uce)
-						{
+						catch(UnsupportedCharsetException uce) {
 							LoadingUtils.makeACrash("[MainMenuRegistry]UTF-8 is unsupported on your system(???)", clazz, uce, false);
-						} catch (NBTException nbte) 
-						{
+						}
+						catch(NBTException nbte) {
 							LoadingUtils.makeACrash("[MainMenuRegistry]"+detected+" Is not a valid menu!", clazz, nbte, false);
 							nbte.printStackTrace();
 						}
-						finally
-						{
+						finally {
 							IOUtils.closeQuietly(fis);
 						}
 					}
 				}
 			}
 		}
-		catch(IOException ioe)
-		{
+		catch(IOException ioe) {
 			LoadingUtils.makeACrash("[MainMenuRegistry]Couldn't read files in your config directory", clazz, ioe, false);
 		}
 	}
-	
+
 	/**
 	 * Internal. Validates the NBT to be a valid NBTMainMenu tag
 	 * @param tag
 	 * @return
 	 */
-	public static boolean validateNBT(NBTTagCompound tag)
-	{
+	public static boolean validateNBT(NBTTagCompound tag) {
 		return tag.hasKey("menuName") && tag.hasKey("menuDesc");
 	}
-
 }

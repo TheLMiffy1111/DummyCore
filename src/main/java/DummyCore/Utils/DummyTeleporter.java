@@ -10,7 +10,7 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
 /**
- * 
+ *
  * @author TheLMiffy1111
  * @version From DummyCore 2.3
  * @Description Used to teleport between dimensions.
@@ -67,7 +67,7 @@ public class DummyTeleporter extends Teleporter {
 			ObjectIterator<Teleporter.PortalPosition> objectiterator = destinationCoordinateCache.values().iterator();
 
 			while(objectiterator.hasNext()) {
-				Teleporter.PortalPosition teleporter$portalposition = (Teleporter.PortalPosition)objectiterator.next();
+				Teleporter.PortalPosition teleporter$portalposition = objectiterator.next();
 
 				if(teleporter$portalposition == null || teleporter$portalposition.lastUpdateTime < i) {
 					objectiterator.remove();

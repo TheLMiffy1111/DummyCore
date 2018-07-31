@@ -1,16 +1,16 @@
 package DummyCore.Utils;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.0
  * @Description used to work with 2d coord system. Of course, should be a vec2D, but we are working with minecraft =)
  */
 public class Coord2D {
-	
+
 	public float x;
 	public float z;
-	
+
 	/**
 	 * Creates a 2d coordinate for 2 given vars
 	 * @param i - x
@@ -21,7 +21,7 @@ public class Coord2D {
 		this.x = i;
 		this.z = j;
 	}
-	
+
 	/**
 	 * Creates a 0,0 2d coordinate
 	 */
@@ -29,7 +29,7 @@ public class Coord2D {
 	{
 		this(0,0);
 	}
-	
+
 	/**
 	 * Not only transforms the coord to a string,  but also does it in a way that it can be later parsed by DummyData
 	 */
@@ -38,7 +38,7 @@ public class Coord2D {
 	{
 		return "||x:"+x+"||z:"+z;
 	}
-	
+
 	/**
 	 * Creates a Coord2D object from a valid DummyData string
 	 * @param data - the valid DummyData string
@@ -51,7 +51,7 @@ public class Coord2D {
 		float cZ = Float.parseFloat(dt[1].fieldValue);
 		return new Coord2D(cX,cZ);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{

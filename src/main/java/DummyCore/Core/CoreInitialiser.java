@@ -50,14 +50,14 @@ public class CoreInitialiser {
 	public static final String modVersion = "4";
 	public static final String mcVersion = "[1.12,1.13)";
 	public static final String modmcVersion = "112";
-	public static final String buildVersion = "3";
+	public static final String buildVersion = "4";
 	public static final String buildPostfix = "";
 	public static final String version = globalVersion+'.'+modVersion+'.'+modmcVersion+'.'+buildVersion+'.'+buildPostfix;
 
 	public static CoreInitialiser instance;
 	public static DummyConfig cfg = new DummyConfig();
 	public static SimpleNetworkWrapper network;
-	@SidedProxy(clientSide = "DummyCore.Utils.NetProxy_Client",serverSide = "DummyCore.Utils.NetProxy_Server")
+	@SidedProxy(clientSide = "DummyCore.Utils.NetProxy_Client", serverSide = "DummyCore.Utils.NetProxy_Server")
 	public static NetProxy_Server proxy;
 	public static final DummyPacketHandler packetHandler = new DummyPacketHandler();
 

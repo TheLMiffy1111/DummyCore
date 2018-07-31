@@ -6,14 +6,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 //Internal
 public class DummyPacketIMSG implements IMessage{
-	
+
 	public String dataStr;
-	
+
 	public DummyPacketIMSG()
 	{
-		
+
 	}
-	
+
 	public DummyPacketIMSG(String data)
 	{
 		dataStr = data;
@@ -27,7 +27,7 @@ public class DummyPacketIMSG implements IMessage{
 	@Override
 	public void toBytes(ByteBuf buf) {
 		ByteBufUtils.writeUTF8String(buf, dataStr);
-		
+
 	}
 
 }

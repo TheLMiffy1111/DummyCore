@@ -5,10 +5,10 @@ package DummyCore.Utils;
  * @author modbder
  *
  */
-public abstract class ScheduledServerAction 
+public abstract class ScheduledServerAction
 {
 	public int actionTime;
-	
+
 	/**
 	 * Creates an action with a given time delay
 	 * @param time
@@ -17,7 +17,7 @@ public abstract class ScheduledServerAction
 	{
 		actionTime = time;
 	}
-	
+
 	/**
 	 * Runnable.run, anyone? The same.
 	 */

@@ -9,24 +9,24 @@ import java.util.List;
  *
  */
 public class SyncUtils {
-	
+
 	public static List<String> needsSyncing_Global = new ArrayList<String>();
 	public static List<String> needsSyncing_Player = new ArrayList<String>();
-	
+
 	public static void addRequiresSync(String playerName, String modid, String dataName)
 	{
 		String mainSyncString = playerName+"|"+modid+":"+dataName;
 		if(!needsSyncing_Player.contains(mainSyncString))
 			needsSyncing_Player.add(mainSyncString);
 	}
-	
+
 	public static void addRequiresSync(String modid, String dataName)
 	{
 		String mainSyncString = modid+":"+dataName;
 		if(!needsSyncing_Global.contains(mainSyncString))
 			needsSyncing_Global.add(mainSyncString);
 	}
-	
+
 	public static void makeSync_LotsSmallPackets()
 	{
 		for(int i = 0; i < needsSyncing_Global.size(); ++i)

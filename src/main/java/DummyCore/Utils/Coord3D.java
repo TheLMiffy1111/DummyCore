@@ -1,17 +1,17 @@
 package DummyCore.Utils;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.1
  * @Description used to work with 3d coord system. Of course, should be a vec3D, but we are working with minecraft =)
  */
 public class Coord3D {
-	
+
 	public float x;
 	public float y;
 	public float z;
-	
+
 	/**
 	 * Creates a 3d coordinate from 3 given vars
 	 * @param posX - x
@@ -23,7 +23,7 @@ public class Coord3D {
 		this.y = (float) posY;
 		this.z = (float) posZ;
 	}
-	
+
 	/**
 	 * Creates a 3d coordinate from 3 given vars
 	 * @param i - x
@@ -35,7 +35,7 @@ public class Coord3D {
 		this.y = k;
 		this.z = j;
 	}
-	
+
 	/**
 	 * Creates a 0,0,0 3d point
 	 */
@@ -43,7 +43,7 @@ public class Coord3D {
 	{
 		this(0,0,0);
 	}
-	
+
 	/**
 	 * Not only transforms the coord to a string,  but also does it in a way that it can be later parsed by DummyData
 	 */
@@ -52,7 +52,7 @@ public class Coord3D {
 	{
 		return "||x:"+x+"||y:"+y+"||z:"+z;
 	}
-	
+
 	/**
 	 * Creates a Coord3D object from a valid DummyData string
 	 * @param data - the valid DummyData string

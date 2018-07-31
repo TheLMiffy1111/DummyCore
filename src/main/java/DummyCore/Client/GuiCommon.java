@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
  *
  */
 public class GuiCommon extends GuiContainer {
-	
+
 	public List<GuiElement> elementList = new ArrayList<GuiElement>();
 	public TileEntity genericTile;
 	//TODO change to a custom .png image to support resource packs properly
@@ -32,7 +32,7 @@ public class GuiCommon extends GuiContainer {
 	public GuiCommon(Container c) {
 		super(c);
 	}
-	
+
 	/**
 	 * The constructor you should use.
 	 * @param c - the container(inventory) for this GUI
@@ -46,14 +46,14 @@ public class GuiCommon extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f1,int i1, int i2) {
 		GlStateManager.color(1, 1, 1);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.mc.renderEngine.bindTexture(guiGenLocation);
-        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(k+60, l+16, 6, 6, 28, 54);
-        this.drawTexturedModalRect(k+88, l+16, 6, 6, 28, 54);
+		int k = (this.width - this.xSize) / 2;
+		int l = (this.height - this.ySize) / 2;
+		this.mc.renderEngine.bindTexture(guiGenLocation);
+		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+		this.drawTexturedModalRect(k+60, l+16, 6, 6, 28, 54);
+		this.drawTexturedModalRect(k+88, l+16, 6, 6, 28, 54);
 		for(int i = 0; i < this.inventorySlots.inventorySlots.size(); ++i) {
-			Slot slt = (Slot)this.inventorySlots.inventorySlots.get(i);
+			Slot slt = this.inventorySlots.inventorySlots.get(i);
 			renderSlot(slt);
 			GlStateManager.color(1, 1, 1);
 		}
@@ -65,7 +65,7 @@ public class GuiCommon extends GuiContainer {
 		}
 		GlStateManager.color(1, 1, 1);
 	}
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
@@ -75,9 +75,9 @@ public class GuiCommon extends GuiContainer {
 
 	public void renderSlot(Slot slt) {
 		GlStateManager.color(1, 1, 1);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.mc.renderEngine.bindTexture(slotLocation);
+		int k = (this.width - this.xSize) / 2;
+		int l = (this.height - this.ySize) / 2;
+		this.mc.renderEngine.bindTexture(slotLocation);
 		this.drawTexturedModalRect(k+slt.xPos-1, l+slt.yPos-1, 7, 83, 18, 18);
 	}
 }

@@ -8,16 +8,16 @@ import net.minecraft.tileentity.TileEntity;
  * @author modbder
  *
  */
-public class TileStatTracker 	
+public class TileStatTracker
 {
 	public TileEntity trackedTile;
 	public NBTTagCompound trackedTag;
-	
+
 	public TileStatTracker(TileEntity tracked)
 	{
 		trackedTile = tracked;
 	}
-	
+
 	public boolean tileNeedsSyncing()
 	{
 		if(trackedTile == null) return false;
@@ -28,16 +28,16 @@ public class TileStatTracker
 			trackedTile.writeToNBT(trackedTag);
 			return true;
 		}
-		
+
 		trackedTile.writeToNBT(currentTag);
 		if(currentTag.equals(trackedTag))
 		{
 			trackedTile.writeToNBT(trackedTag);
 			return false;
 		}
-		
+
 		trackedTile.writeToNBT(trackedTag);
 		return true;
 	}
-	
+
 }

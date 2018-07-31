@@ -9,19 +9,19 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
 /**
- * 
+ *
  * @author TheLMiffy1111
  * @version From DummyCore 2.3
  * @Description
  */
 public abstract class DummyPortalGenerator {
-	
+
 	public abstract boolean placeInExistingPortal(WorldServer worldIn, Entity entityIn, float rotationYaw, double x, double y, double z,
 			Random random, Long2ObjectMap<Teleporter.PortalPosition> destinationCoordinateCache);
-	
+
 	public abstract boolean makePortal(WorldServer worldIn, Entity entityIn, double x, double y, double z,
 			Random random, Long2ObjectMap<Teleporter.PortalPosition> destinationCoordinateCache);
-	
+
 	public static final DummyPortalGenerator TELEPORT_ONLY = new DummyPortalGenerator() {
 
 		@Override

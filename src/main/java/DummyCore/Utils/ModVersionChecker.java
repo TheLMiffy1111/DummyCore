@@ -25,11 +25,11 @@ import net.minecraft.util.text.TextFormatting;
  *
  */
 public class ModVersionChecker {
-	
+
 	public static final ArrayList<DCMod> vCheckRequesters = new ArrayList<DCMod>();
 	public static final Hashtable<DCMod,String> latestVersions = new Hashtable<DCMod,String>();
 	public static final Hashtable<DCMod,String> modsURIs = new Hashtable<DCMod,String>();
-	
+
 	/**
 	 * Add a check request for a DCMod. You can do this before the game is initialised
 	 * @param mod - the mod to check
@@ -45,21 +45,21 @@ public class ModVersionChecker {
 		}else
 			Notifier.notifyError("[DCVersionChecker]Catched an attempt to add a version check request for a non registered mod!");
 	}
-	
+
 	//Internal
 	public static void dispatchModChecks()
 	{
 		for(int i = 0; i < vCheckRequesters.size(); ++i)
 			requestModVCheck(vCheckRequesters.get(i));
 	}
-	
+
 	//Internal
 	public static void requestModVCheck(DCMod mod)
 	{
 		if(vCheckRequesters.contains(mod))
 			new ThreadURICheck(mod,modsURIs.get(mod)).start();
 	}
-	
+
 	//Internal
 	public static void respondToURICheckSuccess(DCMod mod)
 	{
@@ -71,10 +71,10 @@ public class ModVersionChecker {
 			String[] cVersions = mod.version.split(".");
 			for(int i = 0; i < versions.length; ++i)
 				versions[i] = removeButNumbers(versions[i]);
-			
+
 			for(int i = 0; i < cVersions.length; ++i)
 				cVersions[i] = removeButNumbers(cVersions[i]);
-			
+
 			for(int i = 0; i < 4; ++i)
 			{
 				int ii = i;
@@ -106,7 +106,7 @@ public class ModVersionChecker {
 		latestVersions.remove(mod);
 		modsURIs.remove(mod);
 	}
-	
+
 	//Internal
 	public static void tryNotifyDMOutdatedMod(DCMod mod, String latest, int step)
 	{
@@ -116,33 +116,33 @@ public class ModVersionChecker {
 			String steppedString = "";
 			switch(step)
 			{
-				case 0:
-				{
-					steppedString = String.format("%s is horribly outdated(Your version is %s, latest is %s) has bugs and no longer supported! Update as soon as possible!", mod.ufName, mod.version, latest);
-					break;
-				}
-				case 1:
-				{
-					steppedString = String.format("%s is outdated(Your version is %s, latest is %s)! Consider updating!", mod.ufName, mod.version, latest);
-					break;
-				}
-				case 2:
-				{
-					steppedString = String.format("%s is available for another version of the game(Your version is %s, latest is %s)!", mod.ufName, mod.version, latest);
-					break;
-				}
-				case 3:
-				{
-					steppedString = String.format("%s has a new version available(Your version is %s, latest is %s)!", mod.ufName, mod.version, latest);
-					break;
-				}
+			case 0:
+			{
+				steppedString = String.format("%s is horribly outdated(Your version is %s, latest is %s) has bugs and no longer supported! Update as soon as possible!", mod.ufName, mod.version, latest);
+				break;
+			}
+			case 1:
+			{
+				steppedString = String.format("%s is outdated(Your version is %s, latest is %s)! Consider updating!", mod.ufName, mod.version, latest);
+				break;
+			}
+			case 2:
+			{
+				steppedString = String.format("%s is available for another version of the game(Your version is %s, latest is %s)!", mod.ufName, mod.version, latest);
+				break;
+			}
+			case 3:
+			{
+				steppedString = String.format("%s has a new version available(Your version is %s, latest is %s)!", mod.ufName, mod.version, latest);
+				break;
+			}
 			default:
 				break;
 			}
 			player.sendMessage(new TextComponentString(steppedString).setStyle(new Style().setColor(TextFormatting.RED)));
 		}
 	}
-	
+
 	//Internal
 	public static void tryNotifySimpleOutdatedMod(DCMod mod, String latest)
 	{
@@ -150,7 +150,7 @@ public class ModVersionChecker {
 		if(player != null)
 			player.sendMessage(new TextComponentString(String.format("%s is outdated(Your version is %s, latest is %s)! Consider updating!", mod.ufName, mod.version, latest)).setStyle(new Style().setColor(TextFormatting.RED)));
 	}
-	
+
 	//Internal
 	public static boolean isVersionDMValid(String version)
 	{
@@ -163,20 +163,20 @@ public class ModVersionChecker {
 		}
 		return false;
 	}
-	
+
 	//Internal
 	public static String removeButNumbers(String s)
 	{
 		String result = "";
-		
+
 		char[] chars = s.toCharArray();
 		for(char c : chars)
 			if(Character.isDigit(c))
 				result += c;
-		
+
 		return result;
 	}
-	
+
 	//Internal
 	public static class ThreadURICheck extends Thread
 	{
@@ -190,7 +190,7 @@ public class ModVersionChecker {
 			this.mod = mod;
 			this.uristr = uri;
 		}
-		
+
 		@Override
 		public void run()
 		{

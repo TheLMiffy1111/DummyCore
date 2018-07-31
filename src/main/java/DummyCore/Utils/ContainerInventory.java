@@ -119,7 +119,7 @@ public abstract class ContainerInventory extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex) {
 		ItemStack newItemStack = ItemStack.EMPTY;
-		Slot slot = (Slot) inventorySlots.get(slotIndex);
+		Slot slot = inventorySlots.get(slotIndex);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -154,7 +154,7 @@ public abstract class ContainerInventory extends Container {
 		{
 			while (itemStack.getCount() > 0 && (!ascending && currentSlotIndex < slotMax || ascending && currentSlotIndex >= slotMin))
 			{
-				slot = (Slot) this.inventorySlots.get(currentSlotIndex);
+				slot = this.inventorySlots.get(currentSlotIndex);
 				stackInSlot = slot.getStack();
 				if (slot.isItemValid(itemStack) && equalsIgnoreStackSize(itemStack, stackInSlot))
 				{
@@ -184,7 +184,7 @@ public abstract class ContainerInventory extends Container {
 			currentSlotIndex = ascending ? slotMax - 1 : slotMin;
 			while (!ascending && currentSlotIndex < slotMax || ascending && currentSlotIndex >= slotMin)
 			{
-				slot = (Slot) this.inventorySlots.get(currentSlotIndex);
+				slot = this.inventorySlots.get(currentSlotIndex);
 				stackInSlot = slot.getStack();
 				if (slot.isItemValid(itemStack) && stackInSlot.isEmpty())
 				{

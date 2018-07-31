@@ -109,7 +109,7 @@ public class ExtendedAABB {
 	public static ExtendedAABB fromPos(BlockPos pos1, BlockPos pos2)
 	{
 		return fromBounds(pos1.getX(),pos1.getY(),pos1.getZ(),pos2.getX(),pos2.getY(),pos2.getZ());
-	}	
+	}
 
 	public static ExtendedAABB fromBounds(double x1, double y1, double z1, double x2, double y2, double z2)
 	{
@@ -220,12 +220,12 @@ public class ExtendedAABB {
 
 	public boolean intersectsWith(ExtendedAABB other)
 	{
-		return other.maxX > this.minX && other.minX < this.maxX ? (other.maxY > this.minY && other.minY < this.maxY ? other.maxZ > this.minZ && other.minZ < this.maxZ : false) : false;
+		return other.maxX > this.minX && other.minX < this.maxX ? other.maxY > this.minY && other.minY < this.maxY ? other.maxZ > this.minZ && other.minZ < this.maxZ : false : false;
 	}
 
 	public boolean isVecInside(Vec3d vec)
 	{
-		return vec.x > this.minX && vec.x < this.maxX ? (vec.y > this.minY && vec.y < this.maxY ? vec.z > this.minZ && vec.z < this.maxZ : false) : false;
+		return vec.x > this.minX && vec.x < this.maxX ? vec.y > this.minY && vec.y < this.maxY ? vec.z > this.minZ && vec.z < this.maxZ : false : false;
 	}
 
 	public double getAverageEdgeLength()

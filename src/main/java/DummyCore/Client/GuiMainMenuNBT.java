@@ -133,7 +133,7 @@ public class GuiMainMenuNBT extends GuiMainMenu implements IMainMenu{
 	public void confirmClicked(boolean yes, int id)
 	{
 		super.confirmClicked(yes, id);
-		for(GuiButton btn : (List<GuiButton>)this.buttonList)
+		for(GuiButton btn : this.buttonList)
 			if(btn.id == id && btn instanceof CustomButton && CustomButton.class.cast(btn).url != null)
 			{
 				if(yes)
@@ -195,6 +195,7 @@ public class GuiMainMenuNBT extends GuiMainMenu implements IMainMenu{
 		}
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{

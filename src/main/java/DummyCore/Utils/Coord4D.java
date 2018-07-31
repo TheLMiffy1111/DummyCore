@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * 
+ *
  * @author TheLMiffy1111
  */
 public class Coord4D {
@@ -36,7 +36,7 @@ public class Coord4D {
 	public Coord4D(BlockPos pos, World w) {
 		this(pos, w.provider.getDimension());
 	}
-	
+
 	public Coord4D(TileEntity te) {
 		this(te.getPos(), te.getWorld());
 	}

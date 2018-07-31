@@ -10,12 +10,12 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 @Deprecated
 public class DummyEvent_OnKeyboardKeyPressed_Server extends Event{
-	
+
 	public int keyID;
 	public String keyName;
 	public EntityPlayer presser;
 	public boolean pressed;
-	
+
 	public DummyEvent_OnKeyboardKeyPressed_Server(int keyId, String keyname, EntityPlayer player, boolean bool)
 	{
 		keyID = keyId;

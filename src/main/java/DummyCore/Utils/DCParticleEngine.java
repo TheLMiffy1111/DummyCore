@@ -28,20 +28,20 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * 
+ *
  * @author modbder
  * My simple ParticleEngine for rendering mod particles outside of vanilla's particle system. Allows for more than 4k particles.
  * Also allows more blend/alpha control, has Forge event support, etc.
  */
 public class DCParticleEngine {
-	
+
 	public static final Hashtable<LayerEntry,ArrayList<Particle>> particles = new Hashtable<LayerEntry,ArrayList<Particle>>();
 	public static final ArrayList<ParticleTicket> tickets = new ArrayList<ParticleTicket>();
 	public static final Hashtable<DCMod,ParticleTicket> ticketData = new Hashtable<DCMod,ParticleTicket>();
 	public static final ArrayList<Particle> allParticles = new ArrayList<Particle>();
-	
+
 	/**
-	 * 
+	 *
 	 * @author modbder
 	 * Layer system for particles. Particles render in layers for optimization, where every layer is 1 draw call.
 	 * 1 layer can only have 1 texture and 1 set of params for blend/alpha control.
@@ -58,7 +58,7 @@ public class DCParticleEngine {
 		public int alpha_index;
 		public float alpha_func;
 		public int maxParticlesFor;
-		
+
 		/**
 		 * Creates a new LayerEntry with the given texture
 		 * @param loc - a pointer to your texture
@@ -67,7 +67,7 @@ public class DCParticleEngine {
 		{
 			texture = loc;
 		}
-		
+
 		/**
 		 * Enables the blend
 		 * @return this
@@ -77,7 +77,7 @@ public class DCParticleEngine {
 			blend = true;
 			return this;
 		}
-		
+
 		/**
 		 * Enables the alpha
 		 * @return this
@@ -87,7 +87,7 @@ public class DCParticleEngine {
 			alpha = true;
 			return this;
 		}
-		
+
 		/**
 		 * Binds a set of src and dst blend func to this layer
 		 * @param i - src func
@@ -100,7 +100,7 @@ public class DCParticleEngine {
 			blend_dst = j;
 			return this;
 		}
-		
+
 		/**
 		 * Binds a set of alpha func and modifier to this layer
 		 * @param i - the func
@@ -113,7 +113,7 @@ public class DCParticleEngine {
 			alpha_func = f;
 			return this;
 		}
-		
+
 		/**
 		 * Sets the maximum number of particles for the layer to be rendered on
 		 * @param i - new maximum
@@ -124,7 +124,7 @@ public class DCParticleEngine {
 			maxParticlesFor = i;
 			return this;
 		}
-		
+
 		/**
 		 * A simple forge event. Cancel to cancel the render for layer of particles. You can use this to do additional GL stuff
 		 * @author modbder
@@ -137,7 +137,7 @@ public class DCParticleEngine {
 			{
 				layer = par1;
 			}
-			
+
 			@Cancelable
 			public static class Pre extends LayerEvent{
 
@@ -145,7 +145,7 @@ public class DCParticleEngine {
 					super(par1);
 				}
 			}
-			
+
 			public static class Post extends LayerEvent{
 
 				public Post(LayerEntry par1) {
@@ -154,7 +154,7 @@ public class DCParticleEngine {
 			}
 		}
 	}
-	
+
 	/**
 	 * Each mod is supposed to have one of these if it is using a DC's particle system.
 	 * @author modbder
@@ -165,7 +165,7 @@ public class DCParticleEngine {
 		public DCMod owner;
 		public final ArrayList<LayerEntry> layers = new ArrayList<LayerEntry>();
 		public int maxParticlesForMod;
-		
+
 		/**
 		 * Constructs a new ticket for the given mod
 		 * @param mod - the mod object
@@ -174,7 +174,7 @@ public class DCParticleEngine {
 		{
 			owner = mod;
 		}
-		
+
 		/**
 		 * Sets the maximum allowed particles for a ticket. -1 is no limit. This is what will be compared to the amount of particles on ALL layers!
 		 * @param i - the new maximum amount
@@ -185,7 +185,7 @@ public class DCParticleEngine {
 			maxParticlesForMod = i;
 			return this;
 		}
-		
+
 		/**
 		 * Appends a new LayerEntry for your particles to render on
 		 * @param layer - the LayerEntry to add
@@ -198,7 +198,7 @@ public class DCParticleEngine {
 			return this;
 		}
 	}
-	
+
 	/**
 	 * Creates a new ticket for mod, found by class. If there is already a ticket registered returns it instead. If the class object is not a valid DCMod returns null
 	 * @param mod - the class of your mod
@@ -210,7 +210,7 @@ public class DCParticleEngine {
 			return obtainTicketForMod(Core.getModFromClass(mod));
 		return null;
 	}
-	
+
 	/**
 	 * Creates or gets a ParticleTicket for the given mod
 	 * @param mod - the mod
@@ -222,7 +222,7 @@ public class DCParticleEngine {
 			return ticketData.get(mod);
 		return createTicket(mod);
 	}
-	
+
 	/**
 	 * Creates a ParticleTicket for the given mod
 	 * @param mod - the mod
@@ -235,7 +235,7 @@ public class DCParticleEngine {
 		ticketData.put(mod, ticket);
 		return ticket;
 	}
-	
+
 	/**
 	 * Adds a given particle to the given layer
 	 * @param layer - the layer to place the particle on
@@ -252,21 +252,21 @@ public class DCParticleEngine {
 		for(LayerEntry le : layer.owner.layers)
 			if(particles.containsKey(le))
 				currentParticlesForMod += particles.get(le).size();
-		if(currentParticlesForLayer >= layer.maxParticlesFor || (currentParticlesForMod >= layer.owner.maxParticlesForMod && layer.owner.maxParticlesForMod != -1))
+		if(currentParticlesForLayer >= layer.maxParticlesFor || currentParticlesForMod >= layer.owner.maxParticlesForMod && layer.owner.maxParticlesForMod != -1)
 			return;
 		/*if(particle.dimension != Minecraft.getMinecraft().player.dimension)
 			return;*/
 		allParticles.add(particle);
 		particles.get(layer).add(particle);
 	}
-	
+
 	//Internal
 	public static void tick()
 	{
 		for(int i = 0; i < allParticles.size(); ++i)
 		{
 			Particle particle = allParticles.get(i);
-			
+
 			if(!particle.isAlive())
 				allParticles.remove(i);
 			else
@@ -275,7 +275,7 @@ public class DCParticleEngine {
 			}
 		}
 	}
-	
+
 	//Internal
 	public static void draw(float partialTicks)
 	{
@@ -310,16 +310,16 @@ public class DCParticleEngine {
 					Minecraft.getMinecraft().renderEngine.bindTexture(layer.texture);
 					EntityPlayerSP renderViewEntity = Minecraft.getMinecraft().player;
 					float rotationViewX = ActiveRenderInfo.getRotationX();
-			    	float rotationViewZ = ActiveRenderInfo.getRotationZ();
-			    	float rotationViewXY = ActiveRenderInfo.getRotationXY();
-			    	float rotationViewYZ = ActiveRenderInfo.getRotationYZ();
-			    	float rotationViewXZ = ActiveRenderInfo.getRotationXZ();
-			    	
-			    	Particle.interpPosX = renderViewEntity.lastTickPosX + (renderViewEntity.posX - renderViewEntity.lastTickPosX) * partialTicks;
-			    	Particle.interpPosY = renderViewEntity.lastTickPosY + (renderViewEntity.posY - renderViewEntity.lastTickPosY) * partialTicks;
-			    	Particle.interpPosZ = renderViewEntity.lastTickPosZ + (renderViewEntity.posZ - renderViewEntity.lastTickPosZ) * partialTicks;
-			    	
-			    	Tessellator.getInstance().getBuffer().begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+					float rotationViewZ = ActiveRenderInfo.getRotationZ();
+					float rotationViewXY = ActiveRenderInfo.getRotationXY();
+					float rotationViewYZ = ActiveRenderInfo.getRotationYZ();
+					float rotationViewXZ = ActiveRenderInfo.getRotationXZ();
+
+					Particle.interpPosX = renderViewEntity.lastTickPosX + (renderViewEntity.posX - renderViewEntity.lastTickPosX) * partialTicks;
+					Particle.interpPosY = renderViewEntity.lastTickPosY + (renderViewEntity.posY - renderViewEntity.lastTickPosY) * partialTicks;
+					Particle.interpPosZ = renderViewEntity.lastTickPosZ + (renderViewEntity.posZ - renderViewEntity.lastTickPosZ) * partialTicks;
+
+					Tessellator.getInstance().getBuffer().begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 					for(int i = 0; i < par.size(); ++i)
 					{
 						Particle particle = par.get(i);
@@ -332,7 +332,7 @@ public class DCParticleEngine {
 							continue;
 						if(!particle.isInRangeToRenderDist(particle.getDistanceToEntity(CoreInitialiser.proxy.getClientPlayer())))
 							continue;*/
-						
+
 						try{
 							particle.renderParticle(Tessellator.getInstance().getBuffer(), CoreInitialiser.proxy.getClientPlayer(), partialTicks, rotationViewX, rotationViewXZ, rotationViewZ, rotationViewYZ, rotationViewXY);;
 						}
@@ -358,7 +358,7 @@ public class DCParticleEngine {
 		GlStateManager.depthMask(true);
 		GlStateManager.popMatrix();
 	}
-	
+
 	//Forge event handling
 	@SubscribeEvent
 	public void tickWorld(TickEvent.ClientTickEvent event)
@@ -366,7 +366,7 @@ public class DCParticleEngine {
 		if(event.phase == Phase.END)
 			tick();
 	}
-	
+
 	//Forge event handling
 	@SubscribeEvent
 	public void renderLast(RenderWorldLastEvent event)

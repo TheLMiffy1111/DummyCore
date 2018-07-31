@@ -45,8 +45,8 @@ public class TextureCTMVerbose extends TextureCTM<TextureTypeCTMVerbose> {
 				(ctm.connected(Dir.BOTTOM_LEFT)  ? 4 : 0) +
 				(ctm.connected(Dir.TOP_LEFT)     ? 8 : 0)
 				;
-		int index0 = (index/4)*4;
-		int index1 = (index%4)*4;
+		int index0 = index/4*4;
+		int index1 = index%4*4;
 		if(!top && !right && !bottom && !left) {
 			sprite = sprites[0];
 			submap = Submap.X1;

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  *
  */
 public class DummyEvent_OnClientGUIButtonPress extends Event{
-	
+
 	/**
 	 * The ID of the button pressed in the GUI
 	 */
@@ -37,7 +37,7 @@ public class DummyEvent_OnClientGUIButtonPress extends Event{
 	 * Any kind of additional press data.
 	 */
 	public DummyData[] additionalData;
-	
+
 	public DummyEvent_OnClientGUIButtonPress(int bID, String s, String s_1, EntityPlayer player,int dx, int dy, int dz, DummyData[] data)
 	{
 		buttonID = bID;

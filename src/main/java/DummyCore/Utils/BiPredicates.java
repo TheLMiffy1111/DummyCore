@@ -9,10 +9,7 @@ import java.util.function.BiPredicate;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Equivalence;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 /**
  * Guava's {@code Predicates}, but with Java BiPredicates.
@@ -83,7 +80,6 @@ public class BiPredicates {
 			}
 		};
 
-		@SuppressWarnings("unchecked")
 		<T, U> BiPredicate<T, U> withNarrowedType() {
 			return (BiPredicate<T, U>) this;
 		}

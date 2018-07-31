@@ -45,7 +45,7 @@ public class DrawUtils {
 		{
 			ResourceLocation loc = new ResourceLocation(mod,texture);
 			locTable.put(mod+":"+texture, loc);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(loc);	
+			Minecraft.getMinecraft().getTextureManager().bindTexture(loc);
 		}
 	}
 
@@ -79,9 +79,9 @@ public class DrawUtils {
 		double maxV = icon.getMaxV();
 		TessellatorWrapper tec = TessellatorWrapper.getInstance();
 		tec.startDrawingQuads();
-		tec.addVertexWithUV(x + 0, y + height, zLevel, minU, minV + ((maxV - minV) * height) / 16D);
-		tec.addVertexWithUV(x + width, y + height, zLevel, minU + ((maxU - minU) * width) / 16D, minV + ((maxV - minV) * height) / 16D);
-		tec.addVertexWithUV(x + width, y + 0, zLevel, minU + ((maxU - minU) * width) / 16D, minV);
+		tec.addVertexWithUV(x + 0, y + height, zLevel, minU, minV + (maxV - minV) * height / 16D);
+		tec.addVertexWithUV(x + width, y + height, zLevel, minU + (maxU - minU) * width / 16D, minV + (maxV - minV) * height / 16D);
+		tec.addVertexWithUV(x + width, y + 0, zLevel, minU + (maxU - minU) * width / 16D, minV);
 		tec.addVertexWithUV(x + 0, y + 0, zLevel, minU, minV);
 		tec.draw();
 		return true;

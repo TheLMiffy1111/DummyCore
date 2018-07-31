@@ -22,14 +22,14 @@ public class ASMManager {
 	 * <br>func_179022_a!&!a translates to [func_179022_a , a], where <b>func_179022_a</b> is an MCP name and <b>a</b> is notch's name
 	 * <br>(Lnet/minecraft/item/ItemStack;)V is a DEOBFUSCATED(FML) description of the method
 	 * <br>(Lnet/minecraft/item/ItemStack;)V!&!(Lamj;)V is our combination of both OBFUSCATED(MCP) and OBFUSCATED(Notch) descriptions
-	 * <br>(Lnet/minecraft/item/ItemStack;)V!&!(Lamj;)V translates to [(Lnet/minecraft/item/ItemStack;)V, (Lamj;)V], where <b>(Lnet/minecraft/item/ItemStack;)V</b> is an MCP desc, and <b>(Lamj;)V</b> is notch's desc 
+	 * <br>(Lnet/minecraft/item/ItemStack;)V!&!(Lamj;)V translates to [(Lnet/minecraft/item/ItemStack;)V, (Lamj;)V], where <b>(Lnet/minecraft/item/ItemStack;)V</b> is an MCP desc, and <b>(Lamj;)V</b> is notch's desc
 	 */
 	public static String REGEX_NOTCH_FROM_MCP = "!&!";
-	
+
 	public static boolean obf(){
 		return FMLForgePlugin.RUNTIME_DEOBF;
 	}
-	
+
 	/**
 	 * Chooses a string based on the environment(dev or obfuscated)
 	 * @param deobf - the deobfuscated var
@@ -40,7 +40,7 @@ public class ASMManager {
 	{
 		return obf() ? obf : deobf;
 	}
-	
+
 	/**
 	 * Compares 2 strings - chooses 1 from the environment, and then checks if the chosen one is the same as the first. Useful for ASM class name comparing
 	 * @param name - the string you are comparing with
@@ -53,12 +53,12 @@ public class ASMManager {
 		String comparedTo = chooseByEnvironment(deobf.replace('/', '.'),obf.replace('/', '.'));
 		return comparedTo.equalsIgnoreCase(name.replace('/', '.'));
 	}
-	
+
 	/**
 	 * Compares 2 strings - chooses 1 from the environment, and then checks if the first par contains the chosen string. Useful for ASM class name comparing
 	 * @param name - the string you are comparing with
 	 * @param deobf - the deobfuscated string
-	 * @param obf - the obfuscated string 
+	 * @param obf - the obfuscated string
 	 * @return true if param 1 contains the chosen string, false if not
 	 */
 	public static boolean compareByEnvironment(String name, String deobf, String obf)
@@ -66,7 +66,7 @@ public class ASMManager {
 		String comparedTo = chooseByEnvironment(deobf.replace('/', '.'),obf.replace('/', '.'));
 		return comparedTo.toLowerCase().contains(name.replace('/', '.').toLowerCase());
 	}
-	
+
 	/**
 	 * Checks if the given ClassNode contains a field with a given name
 	 * @param cn - the ClassNode
@@ -77,7 +77,7 @@ public class ASMManager {
 	{
 		return checkClassForFieldByName(cn,name,name);
 	}
-	
+
 	/**
 	 * Returns the FieldNode with a given name from the given ClassNode if exists, null otherwise
 	 * @param cn - the ClassNode
@@ -88,7 +88,7 @@ public class ASMManager {
 	{
 		return getFieldByName(cn,name,name);
 	}
-	
+
 	/**
 	 * Checks if the given ClassNode contains a field with a name, chosen by environment
 	 * @param cn - the ClassNode
@@ -100,7 +100,7 @@ public class ASMManager {
 	{
 		return checkClassForField(cn,deobfName,obfName,null,null);
 	}
-	
+
 	/**
 	 * Returns the FieldNode with a name chosen by environment from the given ClassNode if exists, null otherwise
 	 * @param cn - the ClassNode
@@ -112,7 +112,7 @@ public class ASMManager {
 	{
 		return getField(cn,deobfName,obfName,null,null);
 	}
-	
+
 	/**
 	 * Returns the FieldNode with a given name and descriptor from the given ClassNode if exists, null otherwise
 	 * @param cn - the ClassNode
@@ -124,7 +124,7 @@ public class ASMManager {
 	{
 		return checkClassForField(cn,name,name,desc,desc);
 	}
-	
+
 	/**
 	 * Checks if the FieldNode with a given name AND descriptor exists in the given ClassNode
 	 * @param cn - the ClassNode
@@ -136,9 +136,9 @@ public class ASMManager {
 	{
 		return getField(cn,name,name,desc,desc);
 	}
-	
+
 	/**
-	 * Checks the given ClassNode for a FieldNode with a name and descriptor chosen by the environment. 
+	 * Checks the given ClassNode for a FieldNode with a name and descriptor chosen by the environment.
 	 * <br>Name OR Descriptor can be null - then the search code will skip those params completely. However BOTH can't be null at the same time.
 	 * @param cn - the ClassNode
 	 * @param deobfName - the field name in DEV(deobfuscated) environment
@@ -151,7 +151,7 @@ public class ASMManager {
 	{
 		return getField(cn,deobfName,obfName,deobfDesc,obfDesc) != null;
 	}
-	
+
 	/**
 	 * Checks the given ClassNode for a FieldNode with a name and descriptor chosen by the environment and returns one if found
 	 * <br>Name OR Descriptor can be null - then the search code will skip those params completely. However BOTH can't be null at the same time.
@@ -166,40 +166,40 @@ public class ASMManager {
 	{
 		String fieldName = null;
 		String fieldDesc = null;
-		
+
 		if(!PrimitiveUtils.checkSameAndNullStrings(deobfName,obfName))
 			fieldName = chooseByEnvironment(deobfName,obfName);
 		if(!PrimitiveUtils.checkSameAndNullStrings(deobfDesc,obfDesc))
 			fieldDesc = chooseByEnvironment(deobfDesc,obfDesc);
-		
+
 		String additionalFN = "";
-		
+
 		if(fieldName != null && fieldName.indexOf(REGEX_NOTCH_FROM_MCP) != -1)
 		{
 			String[] sstr = fieldName.split(REGEX_NOTCH_FROM_MCP);
 			fieldName = sstr[0];
 			additionalFN = sstr[1];
 		}
-		
+
 		String additionalFD = "";
-		
+
 		if(fieldDesc != null && fieldDesc.indexOf(REGEX_NOTCH_FROM_MCP) != -1)
 		{
 			String[] sstr = fieldDesc.split(REGEX_NOTCH_FROM_MCP);
 			fieldDesc = sstr[0];
 			additionalFD = sstr[1];
 		}
-		
+
 		if(PrimitiveUtils.checkSameAndNullStrings(fieldName, fieldDesc))
 			return null;
-		
+
 		for(FieldNode fn : cn.fields)
 			if((fieldName == null || fn.name.equals(fieldName) || fn.name.equals(additionalFN)) && (fieldDesc == null || fn.desc.equals(fieldDesc) || fn.desc.equals(additionalFD)))
 				return fn;
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Checks if a given ClassNode has a method with a given descriptor
 	 * @param cn - the ClassNode
@@ -210,7 +210,7 @@ public class ASMManager {
 	{
 		return checkClassForMethodDesc(cn,desc,desc);
 	}
-	
+
 	/**
 	 * Gets a MethodNode from a given ClassNode by a given descriptor
 	 * @param cn - the ClassNode
@@ -221,7 +221,7 @@ public class ASMManager {
 	{
 		return getMethodByDesc(cn,desc,desc);
 	}
-	
+
 	/**
 	 * Checks if a given ClassNode has a method with a descriptor, chosen by the environment
 	 * @param cn - the ClassNode
@@ -233,7 +233,7 @@ public class ASMManager {
 	{
 		return checkClassForMethod(cn,null,null,deobfDesc,obfDesc);
 	}
-	
+
 	/**
 	 * Gets a MethodNode from a given ClassNode by a descriptor, chosen by the environment
 	 * @param cn - the ClassNode
@@ -245,7 +245,7 @@ public class ASMManager {
 	{
 		return getMethod(cn,null,null,deobfDesc,obfDesc);
 	}
-	
+
 	/**
 	 * Gets a MethodNode from a given ClassNode by a given name
 	 * @param cn - the ClassNode
@@ -256,7 +256,7 @@ public class ASMManager {
 	{
 		return checkClassForMethodName(cn,name,name);
 	}
-	
+
 	/**
 	 * Gets a MethodNode from a given ClassNode by a given name
 	 * @param cn - the ClassNode
@@ -267,7 +267,7 @@ public class ASMManager {
 	{
 		return getMethodByName(cn,name,name);
 	}
-	
+
 	/**
 	 * Checks if a given ClassNode has a method with a name, chosen by the environment
 	 * @param cn - the ClassNode
@@ -279,7 +279,7 @@ public class ASMManager {
 	{
 		return checkClassForMethod(cn,deobfName,obfName,null,null);
 	}
-	
+
 	/**
 	 * Gets a MethodNode from a given ClassNode by a name, chosen by the environment
 	 * @param cn - the ClassNode
@@ -291,7 +291,7 @@ public class ASMManager {
 	{
 		return getMethod(cn,deobfName,obfName,null,null);
 	}
-	
+
 	/**
 	 * Checks if the MethodNode with a given name AND descriptor exists in the given ClassNode
 	 * @param cn - the ClassNode
@@ -303,7 +303,7 @@ public class ASMManager {
 	{
 		return checkClassForMethod(cn,name,name,desc,desc);
 	}
-	
+
 	/**
 	 * Gets a MethodNode with a given name AND descriptor from the given ClassNode
 	 * @param cn - the ClassNode
@@ -315,7 +315,7 @@ public class ASMManager {
 	{
 		return getMethod(cn,name,name,desc,desc);
 	}
-	
+
 	/**
 	 * Checks the given ClassNode for a MethodNode with a name and descriptor chosen by the environment and returns one if found
 	 * <br>Name OR Descriptor can be null - then the search code will skip those params completely. However BOTH can't be null at the same time.
@@ -334,7 +334,7 @@ public class ASMManager {
 			methodName = chooseByEnvironment(deobfName,obfName);
 		if(!PrimitiveUtils.checkSameAndNullStrings(deobfDesc,obfDesc))
 			methodDesc = chooseByEnvironment(deobfDesc,obfDesc);
-		
+
 		String additionalMN = "";
 		if(methodName != null && methodName.contains(REGEX_NOTCH_FROM_MCP))
 		{
@@ -342,7 +342,7 @@ public class ASMManager {
 			methodName = sstr[0];
 			additionalMN = sstr[1];
 		}
-		
+
 		String additionalMD = "";
 		if(methodDesc != null && methodDesc.contains(REGEX_NOTCH_FROM_MCP))
 		{
@@ -350,16 +350,16 @@ public class ASMManager {
 			methodDesc = sstr[0];
 			additionalMD = sstr[1];
 		}
-		
+
 		if(PrimitiveUtils.checkSameAndNullStrings(methodName, methodDesc))
 			return null;
 		for(MethodNode mn : cn.methods)
 			if((methodName == null || methodName.equals(mn.name) || additionalMN.equals(mn.name)) && (methodDesc == null || methodDesc.equals(mn.desc) || additionalMD.equals(mn.desc)))
 				return mn;
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Checks the given ClassNode for a MethodNode with a name and descriptor chosen by the environment
 	 * <br>Name OR Descriptor can be null - then the search code will skip those params completely. However BOTH can't be null at the same time.
@@ -374,7 +374,7 @@ public class ASMManager {
 	{
 		return getMethod(cn,deobfName,obfName,deobfDesc,obfDesc) != null;
 	}
-	
+
 	/**
 	 * Checks if the given ClassNode has an annotation with a given name
 	 * @param cn - the ClassNode
@@ -385,7 +385,7 @@ public class ASMManager {
 	{
 		return checkAnnotationForClass(cn,name,name);
 	}
-	
+
 	/**
 	 * Checks if the given ClassNode has an annotation with a name chosen by environment
 	 * @param cn - the ClassNode
@@ -400,15 +400,15 @@ public class ASMManager {
 			for(AnnotationNode an : cn.invisibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		if(cn.visibleAnnotations != null && cn.visibleAnnotations.size() > 0)
 			for(AnnotationNode an : cn.visibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the given MethodNode has an annotation with a given name
 	 * @param mn - the MethodNode
@@ -419,7 +419,7 @@ public class ASMManager {
 	{
 		return checkAnnotationForMethod(mn,name,name);
 	}
-	
+
 	/**
 	 * Checks if the given MethodNode has an annotation with a name chosen by environment
 	 * @param mn - the MethodNode
@@ -434,15 +434,15 @@ public class ASMManager {
 			for(AnnotationNode an : mn.invisibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		if(mn.visibleAnnotations != null && mn.visibleAnnotations.size() > 0)
 			for(AnnotationNode an : mn.visibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the given FieldNode has an annotation with a given name
 	 * @param fn - the FieldNode
@@ -453,7 +453,7 @@ public class ASMManager {
 	{
 		return checkAnnotationForField(fn,name,name);
 	}
-	
+
 	/**
 	 * Checks if the given MethodNode has an annotation with a name chosen by environment
 	 * @param fn - the FieldNode
@@ -468,12 +468,12 @@ public class ASMManager {
 			for(AnnotationNode an : fn.invisibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		if(fn.visibleAnnotations != null && fn.visibleAnnotations.size() > 0)
 			for(AnnotationNode an : fn.visibleAnnotations)
 				if(an.desc.equals(searchedFor))
 					return true;
-		
+
 		return false;
 	}
 }

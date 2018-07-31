@@ -1,52 +1,6 @@
 package DummyCore.Utils;
 
-import static DummyCore.Utils.OreDictUtils.CommonOres.AGATE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.ALUMINIUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.AMBER;
-import static DummyCore.Utils.OreDictUtils.CommonOres.AMETHYST;
-import static DummyCore.Utils.OreDictUtils.CommonOres.APATITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.ARDITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.BLUETOPAZ;
-import static DummyCore.Utils.OreDictUtils.CommonOres.CHIMERITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.CINNABAR;
-import static DummyCore.Utils.OreDictUtils.CommonOres.COAL;
-import static DummyCore.Utils.OreDictUtils.CommonOres.COBALT;
-import static DummyCore.Utils.OreDictUtils.CommonOres.COPPER;
-import static DummyCore.Utils.OreDictUtils.CommonOres.DIAMOND;
-import static DummyCore.Utils.OreDictUtils.CommonOres.EMERALD;
-import static DummyCore.Utils.OreDictUtils.CommonOres.GALENA;
-import static DummyCore.Utils.OreDictUtils.CommonOres.GOLD;
-import static DummyCore.Utils.OreDictUtils.CommonOres.HEMATITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.IRIDIUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.IRON;
-import static DummyCore.Utils.OreDictUtils.CommonOres.JASPER;
-import static DummyCore.Utils.OreDictUtils.CommonOres.LAPIS;
-import static DummyCore.Utils.OreDictUtils.CommonOres.LEAD;
-import static DummyCore.Utils.OreDictUtils.CommonOres.MALACHITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.MOONSTONE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.MYTHRIL;
-import static DummyCore.Utils.OreDictUtils.CommonOres.NICKEL;
-import static DummyCore.Utils.OreDictUtils.CommonOres.NICKOLITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.OSMIUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.PERIDOT;
-import static DummyCore.Utils.OreDictUtils.CommonOres.PLATINUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.PLUTONIUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.QUARTZ;
-import static DummyCore.Utils.OreDictUtils.CommonOres.REDSTONE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.RUBY;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SALTPETER;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SAPPHIRE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SILICON;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SILVER;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SULFUR;
-import static DummyCore.Utils.OreDictUtils.CommonOres.SUNSTONE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.TESLATITE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.TIN;
-import static DummyCore.Utils.OreDictUtils.CommonOres.TOURMALINE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.TUNGSTEN;
-import static DummyCore.Utils.OreDictUtils.CommonOres.TURQUOISE;
-import static DummyCore.Utils.OreDictUtils.CommonOres.URANIUM;
-import static DummyCore.Utils.OreDictUtils.CommonOres.ZINC;
+import static DummyCore.Utils.OreDictUtils.CommonOres.*;
 
 import java.util.Arrays;
 
@@ -59,7 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
  *
  */
 public class OreDictUtils {
-	
+
 	/**
 	 * These ores can be found in various mods. Just a simple list of all I can remember ;)
 	 * @author modbder
@@ -115,41 +69,41 @@ public class OreDictUtils {
 		SULFUR("oreSulfur"),
 		SALTPETER("oreSalpeter")
 		;
-		
+
 		CommonOres(String... names)
 		{
 			this.names = names;
 		}
-		
+
 		public String[] names;
-		
+
 		public String[] getOreDictNames()
 		{
 			return names;
 		}
-		
+
 		public boolean exists()
 		{
 			return oreDictionaryContains(names);
 		}
-		
+
 		public UnformedItemStack fromThis()
 		{
 			return new UnformedItemStack(names);
 		}
-		
+
 		@Override
 		public String toString()
 		{
 			return names != null && names.length > 0 ? Arrays.asList(names).toString() : super.toString();
 		}
-		
+
 		public CommonOreRarity getRarity()
 		{
 			return CommonOreRarity.byOre(this);
 		}
 	}
-	
+
 	public static enum CommonOreRarity
 	{
 		COMMON(COAL),
@@ -159,32 +113,32 @@ public class OreDictUtils {
 		RARE(PLUTONIUM,PERIDOT,AGATE,JASPER,TOURMALINE,TURQUOISE,BLUETOPAZ),
 		EXCEPTIONAL(DIAMOND,SAPPHIRE,EMERALD,RUBY,AMETHYST,MOONSTONE,TUNGSTEN,COBALT,ARDITE),
 		IMPOSSIBLE(IRIDIUM,SUNSTONE,PLATINUM,MYTHRIL);
-		
+
 		CommonOreRarity(CommonOres... ore)
 		{
 			theOre = ore;
 		}
-		
+
 		public final CommonOres[] theOre;
-		
+
 		public static CommonOres[] byRarity(CommonOreRarity rarity)
 		{
 			return rarity.theOre;
 		}
-		
+
 		public static CommonOreRarity byOre(CommonOres ore)
 		{
 			for(CommonOreRarity cor : CommonOreRarity.values())
 				for(CommonOres ores : cor.theOre)
 					if(ores.equals(ore))
 						return cor;
-			
+
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Used to check, if the Forge Ore Dictionary contains any of the given names in it. 
+	 * Used to check, if the Forge Ore Dictionary contains any of the given names in it.
 	 * @version From DummyCore 2.1
 	 * @param oreNames - the ore names to search
 	 * @return true if OreDictionary contains at least one  from the array, false if not.
@@ -193,11 +147,11 @@ public class OreDictUtils {
 	{
 		for(String oreName : oreNames)
 			if(!OreDictionary.getOres(oreName).isEmpty())
-				
+
 				return true;
 		return false;
 	}
-	
+
 	public static boolean compareIS(ItemStack is, String oreName)
 	{
 		if(!is.isEmpty() && oreDictionaryContains(oreName))
@@ -210,9 +164,9 @@ public class OreDictUtils {
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Used to check, if the Forge Ore Dictionary contains the given name in it. 
+	 * Used to check, if the Forge Ore Dictionary contains the given name in it.
 	 * @version From DummyCore 2.1
 	 * @param oreName - the ore name to search
 	 * @return true if OreDictionary contains the given ore, false if not.
@@ -221,7 +175,7 @@ public class OreDictUtils {
 	{
 		return !OreDictionary.getOres(oreName).isEmpty();
 	}
-	
+
 	/**
 	 * Compares if 2 itemstacks are equal on the oredict side
 	 * @param stk
@@ -233,22 +187,20 @@ public class OreDictUtils {
 	{
 		if(stk.isEmpty() || stk1.isEmpty())
 			return false;
-		
+
 		if(OreDictionary.getOreIDs(stk) == null || OreDictionary.getOreIDs(stk).length == 0 || OreDictionary.getOreIDs(stk1) == null || OreDictionary.getOreIDs(stk1).length == 0)
 			return false;
-		
+
 		int[] ids = OreDictionary.getOreIDs(stk);
 		int[] ids1 = OreDictionary.getOreIDs(stk1);
-		
-		for(int i = 0; i < ids.length; ++i)
-		{
-			for(int j = 0; j < ids1.length; ++j)
-			{
-				if(ids[i] == ids1[j])
+
+		for (int id : ids) {
+			for (int element : ids1) {
+				if(id == element)
 					return true;
 			}
 		}
-		
+
 		return false;
 	}
 }

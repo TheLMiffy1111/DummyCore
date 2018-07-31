@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.WeightedRandom;
 
 /**
- * 
+ *
  * @author thelmiffy1111
  * @Description
  * Basically the old WeightRandomChestContent class, made this because this is still useful.
@@ -23,55 +23,55 @@ public class WeightedRandomChestContent extends WeightedRandom.Item {
 	/** The maximum chance of item generating. */
 	public int theMaximumChanceToGenerateItem;
 
-	public WeightedRandomChestContent(Item p_i45311_1_, int p_i45311_2_, int p_i45311_3_, int p_i45311_4_, int p_i45311_5_) {
-		super(p_i45311_5_);
-		theItem = new ItemStack(p_i45311_1_, 1, p_i45311_2_);
-		theMinimumChanceToGenerateItem = p_i45311_3_;
-		theMaximumChanceToGenerateItem = p_i45311_4_;
+	public WeightedRandomChestContent(Item item, int meta, int minChance, int maxChance, int weight) {
+		super(weight);
+		theItem = new ItemStack(item, 1, meta);
+		theMinimumChanceToGenerateItem = minChance;
+		theMaximumChanceToGenerateItem = maxChance;
 	}
 
-	public WeightedRandomChestContent(ItemStack p_i1558_1_, int p_i1558_2_, int p_i1558_3_, int p_i1558_4_) {
-		super(p_i1558_4_);
-		theItem = p_i1558_1_;
-		theMinimumChanceToGenerateItem = p_i1558_2_;
-		theMaximumChanceToGenerateItem = p_i1558_3_;
+	public WeightedRandomChestContent(ItemStack stack, int minChance, int maxChance, int weight) {
+		super(weight);
+		theItem = stack;
+		theMinimumChanceToGenerateItem = minChance;
+		theMaximumChanceToGenerateItem = maxChance;
 	}
 
 	/**
 	 * Generates the Chest contents.
 	 */
-	public static void generateChestContents(Random p_76293_0_, WeightedRandomChestContent[] p_76293_1_, IInventory p_76293_2_, int p_76293_3_) {
-		for(int j = 0; j < p_76293_3_; ++j) {
-			WeightedRandomChestContent weightedrandomchestcontent = (WeightedRandomChestContent)WeightedRandom.getRandomItem(p_76293_0_, Arrays.asList(p_76293_1_));
-			ItemStack[] stacks = weightedrandomchestcontent.generateChestContent(p_76293_0_, p_76293_2_);
+	public static void generateChestContents(Random rand, WeightedRandomChestContent[] arr, IInventory inv, int tries) {
+		for(int j = 0; j < tries; ++j) {
+			WeightedRandomChestContent weightedrandomchestcontent = WeightedRandom.getRandomItem(rand, Arrays.asList(arr));
+			ItemStack[] stacks = weightedrandomchestcontent.generateChestContent(rand, inv);
 
 			for(ItemStack item : stacks) {
-				p_76293_2_.setInventorySlotContents(p_76293_0_.nextInt(p_76293_2_.getSizeInventory()), item);
+				inv.setInventorySlotContents(rand.nextInt(inv.getSizeInventory()), item);
 			}
 		}
 	}
 
-	public static void generateDispenserContents(Random p_150706_0_, WeightedRandomChestContent[] p_150706_1_, TileEntityDispenser p_150706_2_, int p_150706_3_) {
-		for(int j = 0; j < p_150706_3_; ++j) {
-			WeightedRandomChestContent weightedrandomchestcontent = (WeightedRandomChestContent)WeightedRandom.getRandomItem(p_150706_0_, Arrays.asList(p_150706_1_));
-			int k = weightedrandomchestcontent.theMinimumChanceToGenerateItem + p_150706_0_.nextInt(weightedrandomchestcontent.theMaximumChanceToGenerateItem - weightedrandomchestcontent.theMinimumChanceToGenerateItem + 1);
-			ItemStack[] stacks = weightedrandomchestcontent.generateChestContent(p_150706_0_, p_150706_2_);
+	public static void generateDispenserContents(Random rand, WeightedRandomChestContent[] arr, TileEntityDispenser dispenser, int tries) {
+		for(int j = 0; j < tries; ++j) {
+			WeightedRandomChestContent weightedrandomchestcontent = WeightedRandom.getRandomItem(rand, Arrays.asList(arr));
+			int k = weightedrandomchestcontent.theMinimumChanceToGenerateItem + rand.nextInt(weightedrandomchestcontent.theMaximumChanceToGenerateItem - weightedrandomchestcontent.theMinimumChanceToGenerateItem + 1);
+			ItemStack[] stacks = weightedrandomchestcontent.generateChestContent(rand, dispenser);
 			for(ItemStack item : stacks) {
-				p_150706_2_.setInventorySlotContents(p_150706_0_.nextInt(p_150706_2_.getSizeInventory()), item);
+				dispenser.setInventorySlotContents(rand.nextInt(dispenser.getSizeInventory()), item);
 			}
 		}
 	}
 
-	public static WeightedRandomChestContent[] merge(WeightedRandomChestContent[] p_92080_0_, WeightedRandomChestContent ... p_92080_1_) {
-		WeightedRandomChestContent[] aweightedrandomchestcontent1 = new WeightedRandomChestContent[p_92080_0_.length + p_92080_1_.length];
+	public static WeightedRandomChestContent[] merge(WeightedRandomChestContent[] arr, WeightedRandomChestContent... arr1) {
+		WeightedRandomChestContent[] aweightedrandomchestcontent1 = new WeightedRandomChestContent[arr.length + arr1.length];
 		int i = 0;
 
-		for(int j = 0; j < p_92080_0_.length; ++j) {
-			aweightedrandomchestcontent1[i++] = p_92080_0_[j];
+		for (WeightedRandomChestContent element : arr) {
+			aweightedrandomchestcontent1[i++] = element;
 		}
 
-		WeightedRandomChestContent[] aweightedrandomchestcontent2 = p_92080_1_;
-		int k = p_92080_1_.length;
+		WeightedRandomChestContent[] aweightedrandomchestcontent2 = arr1;
+		int k = arr1.length;
 
 		for(int l = 0; l < k; ++l) {
 			WeightedRandomChestContent weightedrandomchestcontent1 = aweightedrandomchestcontent2[l];
@@ -81,7 +81,7 @@ public class WeightedRandomChestContent extends WeightedRandom.Item {
 		return aweightedrandomchestcontent1;
 	}
 
-	/**	
+	/**
 	 * Allow a mod to submit a custom implementation that can delegate item stack generation beyond simple stack lookup
 	 *
 	 * @param random The current random for generation
@@ -104,7 +104,7 @@ public class WeightedRandomChestContent extends WeightedRandom.Item {
 	 * @return An array containing the generated item stacks
 	 */
 	public static ItemStack[] generateStacks(Random rand, ItemStack source, int min, int max) {
-		int count = min + (rand.nextInt(max - min + 1));
+		int count = min + rand.nextInt(max - min + 1);
 
 		ItemStack[] ret;
 		if(source.getItem() == null) {

@@ -6,7 +6,7 @@ package DummyCore.Utils;
  *
  */
 public @interface ExistenceCheck {
-	
+
 	String[] classPath();
 
 }

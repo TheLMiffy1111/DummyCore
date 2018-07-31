@@ -9,7 +9,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.0
  * @Description Use this class to register new blocks in your game.
@@ -35,7 +35,7 @@ public class BlockRegistry {
 		ForgeRegistries.BLOCKS.register(b.setRegistryName(Core.getModFromClass(modClass).modid, name));
 		ItemBlock ib = null;
 		if(blockClass != null)
-		{	
+		{
 			try
 			{
 				blockClass.getConstructor(Block.class).setAccessible(true);

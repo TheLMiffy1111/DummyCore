@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * 
+ *
  * @author Modbder
  *
  * @Description Used in code where you want to reference either ItemStack or its OreDictionary replacement and where you do not want to use Ingredient.
@@ -25,7 +25,7 @@ public class UnformedItemStack {
 	public static final UnformedItemStack EMPTY;
 
 	public List<ItemStack> possibleStacks = new ArrayList<ItemStack>();
-	
+
 	public UnformedItemStack() {}
 
 	public UnformedItemStack(String... lst) {
@@ -113,7 +113,7 @@ public class UnformedItemStack {
 	public boolean itemStackMatches(ItemStack is) {
 		if(is.isEmpty())
 			return false;
-		return possibleStacks.stream().anyMatch(s->is.getItem()==s.getItem() && (s.getItemDamage()==OreDictionary.WILDCARD_VALUE || (is.getItemDamage()==s.getItemDamage() && ItemStack.areItemStackShareTagsEqual(s, is))));
+		return possibleStacks.stream().anyMatch(s->is.getItem()==s.getItem() && (s.getItemDamage()==OreDictionary.WILDCARD_VALUE || is.getItemDamage()==s.getItemDamage() && ItemStack.areItemStackTagsEqual(s, is)));
 	}
 
 	public static ItemStack copyAndSetCountToOne(ItemStack stk) {
@@ -153,13 +153,12 @@ public class UnformedItemStack {
 	public ItemStack getISToDraw(long time) {
 		int size = this.possibleStacks.size();
 		if(size <= 0)return ItemStack.EMPTY;
-		return this.possibleStacks.get(((int)(time/30))%size);
+		return this.possibleStacks.get((int)(time/30)%size);
 	}
 
 	public void writeToNBTTagCompound(NBTTagCompound tag) {
 		NBTTagList items = new NBTTagList();
-		for(ItemStack is : this.possibleStacks)
-		{
+		for(ItemStack is : this.possibleStacks) {
 			NBTTagCompound itemTag = new NBTTagCompound();
 			is.writeToNBT(itemTag);
 			items.appendTag(itemTag);
@@ -167,7 +166,7 @@ public class UnformedItemStack {
 		tag.setTag("unformedISList", items);
 	}
 
-	public UnformedItemStack(NBTTagCompound tag) {
+	public void readFromNBTTagCompound(NBTTagCompound tag) {
 		NBTTagList items = tag.getTagList("unformedISList", 10);
 		for(int i = 0; i < items.tagCount(); ++i) {
 			NBTTagCompound itemTag = items.getCompoundTagAt(i);

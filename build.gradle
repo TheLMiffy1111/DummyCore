@@ -15,7 +15,7 @@ repositories {
     }
 }
 
-version = "2.4.112.3"
+version = "2.4.112.4"
 group= "DummyCore"
 archivesBaseName = "DummyCoreUnofficial"
 
@@ -25,7 +25,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12-14.21.1.2426"
+    version = "1.12.2-14.23.4.2705"
     runDir = "run"
     mappings = "snapshot_20170624"
     makeObfSourceJar = false
@@ -39,7 +39,7 @@ jar {
 }
 
 dependencies {
-    deobfCompile "team.chisel.ctm:CTM:MC1.12-0.2.2.7"
+    deobfCompile "team.chisel.ctm:CTM:MC1.10.2-0.2.3.26"
 }
 
 processResources
@@ -58,3 +58,34 @@ task deobfJar(type: Jar) {
 artifacts {
     archives deobfJar
 }
+
+//copied from EnderCore, please forgive me
+String getCN() {
+    def firsts = ['Donald', 'Lex', 'Mike', 'Arthur', 'Bridget', 'Dorian', 'Ford', 'Guy', 'James', 'Jessica', 'John', 'Michael', 'Robinson', 'Zaphod', 'Bell', 'Penelope']
+    def lasts = ['Trump', 'Luthor', 'Meyers', 'Dent', 'Jones', 'Gray', 'Prefect', 'Montag', 'Moriarty', 'Simpson', 'Watson', 'Smith', 'Corleone', 'Crusoe', 'Beeblebrox', 'Cranel', 'Akk']
+    def rand = new Random()
+    return firsts[rand.nextInt(firsts.size())] + ' ' + lasts[rand.nextInt(lasts.size())]
+}
+
+task mkKeyStore(type:Exec) {
+   workingDir projectDir
+   commandLine 'keytool', '-genkey', '-alias', 'signFiles', '-keystore', 'dcstore.jks', '-storepass', '123456', '-noprompt', '-dname', 'CN='+getCN(), '-keypass', '123456'
+}
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+    keyStore = 'dcstore.jks'
+    alias = 'signFiles'
+    storePass = '123456'
+    keyPass = '123456'
+}
+
+task rmKeyStore(type: Delete) {
+  delete 'dcstore.jks'
+}
+
+build.dependsOn rmKeyStore
+rmKeyStore.dependsOn signJar
+signJar.dependsOn mkKeyStore
+

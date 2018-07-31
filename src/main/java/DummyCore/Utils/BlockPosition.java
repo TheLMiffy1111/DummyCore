@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  *
  */
 public class BlockPosition {
-	
+
 	public int x;
 	public int y;
 	public int z;
@@ -23,7 +23,7 @@ public class BlockPosition {
 	public int metadata;
 	public TileEntity blockTile;
 	public World wrld;
-	
+
 	public BlockPosition(World w, int posX, int posY, int posZ)
 	{
 		wrld = w;

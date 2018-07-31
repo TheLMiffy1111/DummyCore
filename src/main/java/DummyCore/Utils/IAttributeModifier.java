@@ -6,14 +6,14 @@ import net.minecraft.item.ItemStack;
 
 @Deprecated
 public interface IAttributeModifier {
-	
+
 	public abstract String getType(ItemStack stack, EntityPlayer p);
-	
+
 	public abstract double getValue(ItemStack stack, EntityPlayer p);
-	
+
 	public abstract IAttribute getAttribute(ItemStack stack, EntityPlayer p);
-	
+
 	public abstract String last5OfUUID(ItemStack stack, EntityPlayer p);
-	
+
 	public abstract int getOperation(ItemStack stack, EntityPlayer p);
 }

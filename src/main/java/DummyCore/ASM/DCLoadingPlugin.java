@@ -1,21 +1,18 @@
 package DummyCore.ASM;
 
-import static DummyCore.Core.CoreInitialiser.mcVersion;
-
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 /**
- * 
+ *
  * @author modbder
  * @Description Internal
  */
 public class DCLoadingPlugin implements IFMLLoadingPlugin {
 
 	public DCLoadingPlugin() {}
-	
+
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[] {"DummyCore.ASM.DCASMManager"};

@@ -20,7 +20,7 @@ import DummyCore.Utils.Notifier;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 /**
- * 
+ *
  * @author modbder
  * @Description
  * Internal. Enables features like IItemOverlayElement
@@ -65,9 +65,9 @@ public class DCASMManager implements IClassTransformer {
 			ClassReader classReader = new ClassReader(basicClass);
 			classReader.accept(classNode, ClassReader.EXPAND_FRAMES);
 			ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-			
+
 			MethodNode mn = ASMManager.getMethod(classNode, "renderItemOverlayIntoGUI", "func_180453_a!&!a", "(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", "(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V!&!(Lbdl;Ladz;IILjava/lang/String;)V");
-			
+
 			InsnList lst = new InsnList();
 			lst.add(new LabelNode());
 			lst.add(new VarInsnNode(Opcodes.ALOAD, 1));
@@ -76,15 +76,15 @@ public class DCASMManager implements IClassTransformer {
 			lst.add(new VarInsnNode(Opcodes.ILOAD, 4));
 			lst.add(new VarInsnNode(Opcodes.ALOAD, 5));
 			lst.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "DummyCore/Utils/DummyHooks", "renderItemOverlayIntoGUI", "(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", false));
-			
+
 			mn.instructions.insert(mn.instructions.get(1), lst);
-			
+
 			classNode.accept(cw);
 			byte[] bArray = cw.toByteArray();
-			
+
 			Notifier.notifyCustomMod("DCASM", "Finished Transforming "+name);
 			Notifier.notifyCustomMod("DCASM", "Final byte[] count: "+bArray.length);
-			
+
 			return bArray;
 		}
 		catch(Exception e) {
@@ -104,11 +104,11 @@ public class DCASMManager implements IClassTransformer {
 		//Checking through all annotations.
 		for(int i = 0; i < cn.invisibleAnnotations.size(); ++i) {
 			AnnotationNode node = cn.invisibleAnnotations.get(i);
-			//Checking if the annotation found is the one, that makes us go through 
+			//Checking if the annotation found is the one, that makes us go through
 			if(node.desc.equalsIgnoreCase("LDummyCore/Utils/ExistenceCheck;") && node.values != null && node.values.size() > 0) {
 				Notifier.notifyCustomMod("DummyCoreASM", "Class "+name+" has requested a DummyCore ASM check on it's implementations via DummyCore/Utils/ExistenceCheck annotation. Examining...");
 				//Getting a full list of classes that we need to check for existence
-				List<?> classes = List.class.cast(node.values.get(1)); 
+				List<?> classes = List.class.cast(node.values.get(1));
 				checkedClss = new String[classes.size()];
 				checkedClss = String[].class.cast(classes.toArray(checkedClss));
 				break;

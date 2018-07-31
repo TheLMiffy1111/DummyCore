@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IBlockColor {
 	public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex);
-	
+
 	@SideOnly(Side.CLIENT)
 	default public net.minecraft.client.renderer.color.IBlockColor toMCBlockColor() {
 		IBlockColor itf = this;

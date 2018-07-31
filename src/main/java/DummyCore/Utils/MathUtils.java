@@ -7,7 +7,7 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.0
  * @Description can be used to save you some time writing mathematical functions.
@@ -26,11 +26,11 @@ public class MathUtils {
 	{
 		if(current > max)
 			current = max;
-    	float m = (float)current/max*100;
-    	float n = m/100*textureSize;
-    	return (int)n;
+		float m = (float)current/max*100;
+		float n = m/100*textureSize;
+		return (int)n;
 	}
-	
+
 	/**
 	 * Simply gets a percentage value
 	 * @param current - current value
@@ -39,10 +39,10 @@ public class MathUtils {
 	 */
 	public static int getPercentage(int current, int max)
 	{
-    	float m = (float)current/max*100;
-    	return (int)m;
+		float m = (float)current/max*100;
+		return (int)m;
 	}
-	
+
 	/**
 	 * Used to get the polar-based offset between 2 points in vec2D coord system.
 	 * @version From DummyCore 1.0
@@ -57,7 +57,7 @@ public class MathUtils {
 		float d1 = (float) (position.z + Math.sin(angle * Math.PI / 180.0D) * distance);
 		return new Coord2D(d0,d1);
 	}
-	
+
 	/**
 	 * Used to get a completely(-1.0D - 1.0D) random double.
 	 * @version From DummyCore 1.0
@@ -68,7 +68,7 @@ public class MathUtils {
 	{
 		return rand.nextDouble()-rand.nextDouble();
 	}
-	
+
 	/**
 	 * Used to get a completely(-1.0F - 1.0F) random float.
 	 * @version From DummyCore 1.0
@@ -79,7 +79,7 @@ public class MathUtils {
 	{
 		return rand.nextFloat()-rand.nextFloat();
 	}
-	
+
 	/**
 	 * Used to calculate difference between 2 float.
 	 * @version From DummyCore 1.0
@@ -92,7 +92,7 @@ public class MathUtils {
 		float diff = pos1-pos2;
 		return (float)module(diff);
 	}
-	
+
 	/**
 	 * Swaps 2 integers between eachother.
 	 * @version From DummyCore 1.1
@@ -105,7 +105,7 @@ public class MathUtils {
 	{
 		return new int[]{b,a};
 	}
-	
+
 	/**
 	 * Used to convert decimal number to hexadecimal.
 	 * @version From DummyCore 1.1
@@ -116,7 +116,7 @@ public class MathUtils {
 	{
 		return Integer.parseInt(Integer.toString(a),16);
 	}
-	
+
 	/**
 	 * Used to get the always positive value of a double.
 	 * @version From DummyCore 1.2
@@ -128,7 +128,7 @@ public class MathUtils {
 		if(a < 0) a = -a;
 		return a;
 	}
-	
+
 	/**
 	 * Checks if the given array contains a given object
 	 * @param array - the array to search through
@@ -137,14 +137,13 @@ public class MathUtils {
 	 */
 	public static boolean arrayContains(Object[] array, Object searched)
 	{
-		for(int i = 0; i < array.length; ++i)
-		{
-			if(array[i].equals(searched))
+		for (Object element : array) {
+			if(element.equals(searched))
 				return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if the given array contains a given int
 	 * @param array - the array to search through
@@ -153,14 +152,13 @@ public class MathUtils {
 	 */
 	public static boolean arrayContains(int[] array, int searched)
 	{
-		for(int i = 0; i < array.length; ++i)
-		{
-			if(array[i] == searched)
+		for (int element : array) {
+			if(element == searched)
 				return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Loops through the given array to find the position of the searched param in the array
 	 * @param array - the array to search through
@@ -176,7 +174,7 @@ public class MathUtils {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Compares the boolean array if all booleans within it are the same
 	 * @param array the array
@@ -185,11 +183,10 @@ public class MathUtils {
 	public static boolean isArrayTheSame(boolean[] array)
 	{
 		boolean previous = array[0];
-		for(int i = 0; i < array.length; ++i)
-		{
-			if(array[i] == previous)
+		for (boolean element : array) {
+			if(element == previous)
 			{
-				previous = array[i];
+				previous = element;
 			}else
 			{
 				return false;
@@ -197,19 +194,19 @@ public class MathUtils {
 		}
 		return true;
 	}
-	
+
 	@SafeVarargs
 	public static <T extends Comparable<T>> T max(T...is)
 	{
 		T mI = is.length == 0 ? null : is[0];
-		
+
 		for(T i : is)
 			if(i.compareTo(mI) > 0)
 				mI = i;
-		
+
 		return mI;
 	}
-	
+
 	/**
 	 * Picks a random element from the provided Iterable and Random.
 	 * @param elements An iterable
@@ -221,7 +218,7 @@ public class MathUtils {
 			List<T> lst = (List<T>)elements;
 			return lst.size() == 0 ? null : lst.get(rnd.nextInt(lst.size()));
 		}
-		
+
 		ArrayList<T> lst = Lists.<T>newArrayList(elements);
 		return lst.size() == 0 ? null : lst.get(rnd.nextInt(lst.size()));
 	}

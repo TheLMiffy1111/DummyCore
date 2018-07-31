@@ -12,11 +12,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 public class TimerHijack {
-	
+
 	public static final String mcpName = "timer";
 	public static final String deobfName = "field_71428_T";
 	public static final String obfName = "Q";
-	
+
 	@SideOnly(Side.CLIENT)
 	public static Timer mcTimer;
 

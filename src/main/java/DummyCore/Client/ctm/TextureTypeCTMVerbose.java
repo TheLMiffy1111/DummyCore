@@ -9,17 +9,17 @@ import team.chisel.ctm.client.texture.type.TextureTypeCTM;
 public class TextureTypeCTMVerbose extends TextureTypeCTM {
 
 	@Override
-    public ICTMTexture<? extends TextureTypeCTM> makeTexture(TextureInfo info) {
-        return new TextureCTMVerbose(this, info);
-    }
+	public ICTMTexture<? extends TextureTypeCTM> makeTexture(TextureInfo info) {
+		return new TextureCTMVerbose(this, info);
+	}
 
-    @Override
-    public int requiredTextures() {
-        return 2;
-    }
+	@Override
+	public int requiredTextures() {
+		return 2;
+	}
 
-    @Override
-    public int getQuadsPerSide() {
-        return 1;
-    }
+	@Override
+	public int getQuadsPerSide() {
+		return 1;
+	}
 }

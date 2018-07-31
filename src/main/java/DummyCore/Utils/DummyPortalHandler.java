@@ -39,7 +39,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * 
+ *
  * @author TheLMiffy1111
  * @version From DummyCore 2.3
  * @Description
@@ -201,8 +201,8 @@ public class DummyPortalHandler {
 		double d1 = entityIn.posZ * moveFactor;
 		float f = entityIn.rotationYaw;
 		oldWorldIn.profiler.startSection("placing");
-		d0 = (double)MathHelper.clamp((int)d0, -29999872, 29999872);
-		d1 = (double)MathHelper.clamp((int)d1, -29999872, 29999872);
+		d0 = MathHelper.clamp((int)d0, -29999872, 29999872);
+		d1 = MathHelper.clamp((int)d1, -29999872, 29999872);
 		if(entityIn.isEntityAlive()) {
 			entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
 			teleporter.placeInPortal(entityIn, f);
@@ -244,10 +244,10 @@ public class DummyPortalHandler {
 					Tessellator tessellator = Tessellator.getInstance();
 					BufferBuilder vertexbuffer = tessellator.getBuffer();
 					vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-					vertexbuffer.pos(0.0D, (double)l, -90.0D).tex((double)f1, (double)f4).endVertex();
-					vertexbuffer.pos((double)k, (double)l, -90.0D).tex((double)f3, (double)f4).endVertex();
-					vertexbuffer.pos((double)k, 0.0D, -90.0D).tex((double)f3, (double)f2).endVertex();
-					vertexbuffer.pos(0.0D, 0.0D, -90.0D).tex((double)f1, (double)f2).endVertex();
+					vertexbuffer.pos(0.0D, l, -90.0D).tex(f1, f4).endVertex();
+					vertexbuffer.pos(k, l, -90.0D).tex(f3, f4).endVertex();
+					vertexbuffer.pos(k, 0.0D, -90.0D).tex(f3, f2).endVertex();
+					vertexbuffer.pos(0.0D, 0.0D, -90.0D).tex(f1, f2).endVertex();
 					tessellator.draw();
 					GlStateManager.depthMask(true);
 					GlStateManager.enableDepth();

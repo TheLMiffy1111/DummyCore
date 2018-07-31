@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Streams;
 
 import DummyCore.Core.CoreInitialiser;
 import net.minecraft.advancements.Advancement;
@@ -67,7 +68,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.0
  * @Description can be used to save you some time writing different functions.
@@ -89,7 +90,7 @@ public class MiscUtils {
 	public static final ArrayList<IItemDescriptionGraphics> globalDescriptionGraphics = new ArrayList<IItemDescriptionGraphics>();
 	public static final ArrayList<IHUDElement> hudElements = new ArrayList<IHUDElement>();
 	public static final HashMultimap<Item,IItemOverlayElement> itemOverlayElements = HashMultimap.<Item,IItemOverlayElement>create();
-	//ShaderGroups IDs - 
+	//ShaderGroups IDs -
 	//0 - Pixelated
 	//1 - Smooth
 	//2 - Bright, Highly blured
@@ -165,7 +166,7 @@ public class MiscUtils {
 	}
 
 	/**
-	 * Used to sync the given tile entity with the given side using DummyCore packet handler. 
+	 * Used to sync the given tile entity with the given side using DummyCore packet handler.
 	 * @version From DummyCore 1.4
 	 * @param t - the tileentity to sync.
 	 * @param s - the side, that will accept the packet.
@@ -182,7 +183,7 @@ public class MiscUtils {
 		{
 			DummyPacketHandler.sendToServer(simplePacket);
 		}
-	}  
+	}
 
 	/**
 	 * Sends a given NBT as a packet
@@ -193,11 +194,11 @@ public class MiscUtils {
 	{
 		DummyPacketIMSG_Tile simplePacket = new DummyPacketIMSG_Tile(tileTag);
 		CoreInitialiser.network.sendToAll(simplePacket);
-	}  
+	}
 
 	/**
 	 * Used to apply any attribute to the Player.
-	 * 
+	 *
 	 * @param p - The player to apply the attribute at
 	 * @param attrib - the attribute to modify
 	 * @param uuidLast5Symbols - last 5 symbols of the unique ID of your modifier. Should be unique per item, however not required strictly. The String needs to hold 5 symbols, and allowed symbols are - 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F
@@ -227,12 +228,11 @@ public class MiscUtils {
 	 * @param x - the X coordinate
 	 * @param y - the Y coordinate
 	 * @param z - the Z coordinate
-	 * @param dimId - the ID of the dimension to look the players. 
+	 * @param dimId - the ID of the dimension to look the players.
 	 * @param distance - the distance at which the players will get found.
 	 */
-	@SuppressWarnings({ "rawtypes" })
 	public static void sendPacketToAllAround(World w,Packet pkt, int x, int y, int z, int dimId, double distance) {
-		List<EntityPlayer> playerLst = w.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x-0.5D, y-0.5D, z-0.5D, x+0.5D, y+0.5D, z+0.5D).expand(distance, distance, distance));
+		List<EntityPlayer> playerLst = w.<EntityPlayer>getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x-0.5D, y-0.5D, z-0.5D, x+0.5D, y+0.5D, z+0.5D).grow(distance, distance, distance));
 		if(!playerLst.isEmpty()) {
 			for(int i = 0; i < playerLst.size(); ++i) {
 				EntityPlayer player = playerLst.get(i);
@@ -259,7 +259,6 @@ public class MiscUtils {
 	 * @version From DummyCore 1.7
 	 * @param w - the getEntityWorld() that we are operating in
 	 */
-	@SuppressWarnings({ "rawtypes" })
 	public static void sendPacketToAll(World w,Packet pkt)
 	{
 		List<EntityPlayer> playerLst = w.playerEntities;
@@ -284,9 +283,8 @@ public class MiscUtils {
 	 * @version From DummyCore 1.7
 	 * @param w - the getEntityWorld() that we are operating in
 	 * @param pkt - the packet to send
-	 * @param dimId - the ID of the dimension to look the players. 
+	 * @param dimId - the ID of the dimension to look the players.
 	 */
-	@SuppressWarnings({ "rawtypes" })
 	public static void sendPacketToAllInDim(World w,Packet pkt, int dimId)
 	{
 		List<EntityPlayer> playerLst = w.playerEntities;
@@ -314,7 +312,6 @@ public class MiscUtils {
 	 * @param pkt - the packet to send
 	 * @param player - the player to whom we are sending the packet.
 	 */
-	@SuppressWarnings("rawtypes")
 	public static void sendPacketToPlayer(World w,Packet pkt,EntityPlayer player)
 	{
 		if(player instanceof EntityPlayerMP)
@@ -461,7 +458,7 @@ public class MiscUtils {
 	}
 
 	/**
-	 * Adds a potion effect to the player.<BR> If the effect exists - increases the duration.<BR> If the duration is over specified amount adds +1 level. 
+	 * Adds a potion effect to the player.<BR> If the effect exists - increases the duration.<BR> If the duration is over specified amount adds +1 level.
 	 * @param mob - the entity to add the effect
 	 * @param potion - the potion to apply
 	 * @param index - the duration
@@ -548,7 +545,7 @@ public class MiscUtils {
 	}
 
 	/**
-	 * Imitates the damage increasement by things like Strength potion and Sharpness|Power enchantments. 
+	 * Imitates the damage increasement by things like Strength potion and Sharpness|Power enchantments.
 	 * @param base - The damaged Entity
 	 * @param dam - the damage source
 	 * @param amount - the amount of the damage
@@ -757,12 +754,12 @@ public class MiscUtils {
 	}
 
 	/**
-	 * Searches for the first block, that matches the given condition at the given coordinates in the given Y range. 
+	 * Searches for the first block, that matches the given condition at the given coordinates in the given Y range.
 	 * @param w - the getEntityWorld() where we are searching the block at
 	 * @param toSearch - the block that we are searching for
 	 * @param x - the X coordinate
 	 * @param z - the Z coordinate
-	 * @param maxY - max Y value to search. 
+	 * @param maxY - max Y value to search.
 	 * @param minY - min Y value to search
 	 * @param metadata - the metadata of the block to search. can be -1 or OreDectionary.WILDCARD_VALUE to ignore metadata
 	 * @param shouldHaveAirAbove - should the block that we find have only air blocks above it
@@ -866,21 +863,10 @@ public class MiscUtils {
 		return is1.getItemDamage() == OreDictionary.WILDCARD_VALUE && is2.getItemDamage() == OreDictionary.WILDCARD_VALUE ? Item.getIdFromItem(is1.getItem()) == Item.getIdFromItem(is2.getItem()) || OreDictUtils.oreDictionaryCompare(is1,is2) : is1.isItemEqual(is2) && ItemStack.areItemStacksEqual(is1, is2) || OreDictUtils.oreDictionaryCompare(is1,is2);
 	}
 
-	/**
-	 * Since Enchantment.enchantmentsList is now private(why?) here is a method to get it's object
-	 * @return - the Enchantment.enchantmentsList
-	 */
+	@Deprecated
 	public static Enchantment[] enchantmentList()
 	{
-		try
-		{
-			Class<Enchantment> enchclazz = Enchantment.class;
-			Field fld = enchclazz.getDeclaredFields()[0];
-			fld.setAccessible(true);
-			return Enchantment[].class.cast(fld.get(null));
-
-		}catch(Exception e){e.printStackTrace();}
-		return null;
+		return Streams.stream(Enchantment.REGISTRY).toArray(size->new Enchantment[size]);
 	}
 
 	@Deprecated

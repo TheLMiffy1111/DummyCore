@@ -1,7 +1,7 @@
 package DummyCore.Utils;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.1
  * @Description Used to work with multi-colored light system. I may reimplement it later. Maybe.
@@ -29,24 +29,24 @@ public enum EnumLightColor {
 		mainColor = new DummyColor((byte)red, (byte)green, (byte)blue);
 		colorID = setGlobal();
 	}
-	
+
 	private DummyColor mainColor;
-	
+
 	public DummyColor getColor()
 	{
 		return mainColor;
 	}
-	
+
 	private int setGlobal()
 	{
 		return ++globalID;
 	}
-	
+
 	public int getLightID()
 	{
 		return colorID;
 	}
-	
+
 	private int colorID = 0;
 	private static int globalID = -1;
 

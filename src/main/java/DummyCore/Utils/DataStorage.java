@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.2
  * @Description used to store almost any kind of variable in a single String instance.
  */
 public class DataStorage {
 	private static String dataString = "";
-	
+
 	/**
 	 * Adds the given DummyData to the data string
 	 * @version From DummyCore 1.2
@@ -21,7 +21,7 @@ public class DataStorage {
 	{
 		dataString = dataString.concat(data.toString());
 	}
-	
+
 	/**
 	 * Returns the data string, with all data written to it. Also resets the string, so this should be used only once, after you have stored all your data.
 	 * @version From DummyCore 1.2
@@ -33,7 +33,7 @@ public class DataStorage {
 		dataString = "";
 		return ret;
 	}
-	
+
 	/**
 	 * Used to get your DummyData from the correctly formated string.
 	 * @version From DummyCore 1.2

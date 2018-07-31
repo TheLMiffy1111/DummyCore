@@ -18,16 +18,16 @@ public enum EnumRarityColor {
 	PERFECT("3","Perfect"),
 	ULTIMATE("c","Ultimate"),
 	TURQUOISE("4","Turquoise");
-	
+
 	EnumRarityColor(String s, String s1)
 	{
 		value = s;
 		name = s1;
 	}
-	
+
 	private String value;
 	private String name;
-	
+
 	public String getRarityColor()
 	{
 		String ret = new String();
@@ -35,12 +35,12 @@ public enum EnumRarityColor {
 		ret+=value;
 		return ret;
 	}
-	
+
 	public String getName()
 	{
 		return name;
 	}
-	
+
 	public static EnumRarityColor getColorByHex(String hex)
 	{
 		EnumRarityColor retColor = BROKEN;

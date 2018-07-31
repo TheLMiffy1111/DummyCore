@@ -17,9 +17,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @version From DummyCore 1.0
  * @author Modbder
- * Internal. Used to work with Blocks. 
+ * Internal. Used to work with Blocks.
  */
-public final class CreativePageBlocks extends CreativeTabs{
+public final class CreativePageBlocks extends CreativeTabs {
 	public int delayTime = 0;
 	public ItemStack displayStack = new ItemStack(Blocks.CRAFTING_TABLE,1,0);
 	private final String tabLabel;
@@ -33,42 +33,30 @@ public final class CreativePageBlocks extends CreativeTabs{
 	}
 
 	@Override
-	public ItemStack getIconItemStack()
-	{
+	public ItemStack getIconItemStack() {
 		if(!overrideDisplayStack.isEmpty())
 			return overrideDisplayStack;
 		CoreInitialiser.proxy.choseDisplayStack(this);
 		return this.displayStack;
 	}
 
-	public List<ItemStack> initialiseBlocksList()
-	{
+	public List<ItemStack> initialiseBlocksList() {
 		++tries;
-		if(this.blockList.isEmpty() && tries <= 1)
-		{
-			for(int t = 0; t < Block.REGISTRY.getKeys().size(); ++t)
-			{
-				Block b = Block.getBlockFromName(((ResourceLocation) Block.REGISTRY.getKeys().toArray()[t]).toString());
-				if(b != null && b.getCreativeTabToDisplayOn() == this)
-				{
+		if(this.blockList.isEmpty() && tries <= 1) {
+			for(Block b : Block.REGISTRY) {
+				if(b != null && b.getCreativeTabToDisplayOn() == this) {
 					Item itm = Item.getItemFromBlock(b);
-					if(itm != null)
-					{
+					if(itm != null) {
 						NonNullList<ItemStack> lst = NonNullList.<ItemStack>create();
 						itm.getSubItems(this,lst);
-						if(!lst.isEmpty())
-						{
-							for(ItemStack stk : lst)
-							{
-								if(!stk.isEmpty())
-								{
+						if(!lst.isEmpty()) {
+							for(ItemStack stk : lst) {
+								if(!stk.isEmpty()) {
 									this.blockList.add(stk);
 								}
 							}
-
 						}
 					}
-
 				}
 			}
 
@@ -76,10 +64,10 @@ public final class CreativePageBlocks extends CreativeTabs{
 		}
 		return this.blockList;
 	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
-	public String getTranslatedTabLabel()
-	{
+	public String getTranslatedTabLabel() {
 		return this.tabLabel;
 	}
 

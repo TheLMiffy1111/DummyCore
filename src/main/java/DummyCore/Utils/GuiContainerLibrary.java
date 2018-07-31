@@ -6,7 +6,7 @@ import java.util.List;
 public class GuiContainerLibrary {
 	public static List<String> guis = new ArrayList<String>();
 	public static List<String> containers = new ArrayList<String>();
-	
+
 	/**
 	 * Can be used for easier GUI opening, if you do not want to make a Proxy for that. This method should only be used to open simple GUIs(tile entity ones)
 	 * @param guiClassPath - the path to GUI class. Gui class should extend GuiCommon!

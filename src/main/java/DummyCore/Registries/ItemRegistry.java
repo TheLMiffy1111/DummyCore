@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
- * 
+ *
  * @author Modbder
  * @version From DummyCore 1.0
  * @Description Use this class to register new items in your game.
@@ -33,5 +33,5 @@ public class ItemRegistry {
 		i.setRegistryName(Core.getModFromClass(modClass).modid, name);
 		ForgeRegistries.ITEMS.register(i);
 		CoreInitialiser.proxy.handleItemRegister(i, name, modClass);
-	}	
+	}
 }

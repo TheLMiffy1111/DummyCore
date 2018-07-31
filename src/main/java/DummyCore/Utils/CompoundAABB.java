@@ -9,18 +9,18 @@ import net.minecraft.world.World;
 public class CompoundAABB {
 
 	public ArrayList<ExtendedAABB> bounds = new ArrayList<ExtendedAABB>();
-	
+
 	public CompoundAABB(ExtendedAABB...aabbs)
 	{
 		bounds.addAll(PrimitiveUtils.listOf(aabbs));
 	}
-	
+
 	public CompoundAABB concat(ExtendedAABB aabb)
 	{
 		bounds.add(aabb);
 		return this;
 	}
-	
+
 	public CompoundAABB expand(int mx, int my, int mz, int max, int may, int maz)
 	{
 		CompoundAABB newAabb = new CompoundAABB();
@@ -36,7 +36,7 @@ public class CompoundAABB {
 		}
 		return newAabb;
 	}
-	
+
 	public void replace(World worldIn, Block replace, Block to)
 	{
 		ArrayList<String> beenTo = new ArrayList<String>(128);
@@ -50,7 +50,7 @@ public class CompoundAABB {
 					{
 						if(beenTo.contains(dx+"|"+dy+"|"+dz))
 							continue;
-						
+
 						beenTo.add(dx+"|"+dy+"|"+dz);
 						Block b = worldIn.getBlockState(new BlockPos(dx,dy,dz)).getBlock();
 						if(b.equals(replace))
@@ -61,7 +61,7 @@ public class CompoundAABB {
 		}
 		beenTo = null;
 	}
-	
+
 	public void fill(World worldIn, Block fillWith)
 	{
 		ArrayList<String> beenTo = new ArrayList<String>(128);
@@ -75,7 +75,7 @@ public class CompoundAABB {
 					{
 						if(beenTo.contains(dx+"|"+dy+"|"+dz))
 							continue;
-						
+
 						beenTo.add(dx+"|"+dy+"|"+dz);
 						if(worldIn.isAirBlock(new BlockPos(dx,dy,dz)))
 							worldIn.setBlockState(new BlockPos(dx,dy,dz), fillWith.getDefaultState());
@@ -85,7 +85,7 @@ public class CompoundAABB {
 		}
 		beenTo = null;
 	}
-	
+
 	public int count(World worldIn,Block... blocks)
 	{
 		int counted = 0;
@@ -100,7 +100,7 @@ public class CompoundAABB {
 					{
 						if(beenTo.contains(dx+"|"+dy+"|"+dz))
 							continue;
-						
+
 						beenTo.add(dx+"|"+dy+"|"+dz);
 						Block b = worldIn.getBlockState(new BlockPos(dx,dy,dz)).getBlock();
 						if(PrimitiveUtils.checkArray(blocks, b))
@@ -112,7 +112,7 @@ public class CompoundAABB {
 		beenTo = null;
 		return counted;
 	}
-	
+
 	public static CompoundAABB of(ExtendedAABB...aabbs)
 	{
 		return new CompoundAABB(aabbs);
