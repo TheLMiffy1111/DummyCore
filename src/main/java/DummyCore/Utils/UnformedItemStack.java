@@ -82,18 +82,18 @@ public class UnformedItemStack {
 		if(obj instanceof Object[])
 			for(Object obj1 : (Object[])obj)
 				stacks.addAll(getItemStacks(obj1));
-		if(obj instanceof List<?>)
+		else if(obj instanceof List<?>)
 			for(Object obj1 : (List<?>)obj)
 				stacks.addAll(getItemStacks(obj1));
-		if(obj instanceof ItemStack) {
+		else if(obj instanceof ItemStack) {
 			ItemStack stk = copyAndSetCountToOne((ItemStack)obj);
 			stacks.add(stk);
 		}
-		if(obj instanceof Block)
+		else if(obj instanceof Block)
 			stacks.add(new ItemStack((Block)obj,1,OreDictionary.WILDCARD_VALUE));
-		if(obj instanceof Item)
+		else if(obj instanceof Item)
 			stacks.add(new ItemStack((Item)obj,1,OreDictionary.WILDCARD_VALUE));
-		if(obj instanceof String) {
+		else if(obj instanceof String) {
 			stacks.addAll(Lists.transform(OreDictionary.getOres((String)obj, false), UnformedItemStack::copyAndSetCountToOne));
 		}
 		return stacks;

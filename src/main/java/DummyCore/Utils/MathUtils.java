@@ -22,8 +22,7 @@ public class MathUtils {
 	 * @param textureSize - the var to bind the percentage to
 	 * @return An int representing the percentage of the textureSize param
 	 */
-	public static int pixelatedTextureSize(int current, int max, int textureSize)
-	{
+	public static int pixelatedTextureSize(int current, int max, int textureSize) {
 		if(current > max)
 			current = max;
 		float m = (float)current/max*100;
@@ -37,8 +36,7 @@ public class MathUtils {
 	 * @param max - max value
 	 * @return The percentage of current from max
 	 */
-	public static int getPercentage(int current, int max)
-	{
+	public static int getPercentage(int current, int max) {
 		float m = (float)current/max*100;
 		return (int)m;
 	}
@@ -51,8 +49,7 @@ public class MathUtils {
 	 * @param distance - the distance the point will be offset
 	 * @return new Coord2D with offset coords.
 	 */
-	public static Coord2D polarOffset(Coord2D position, float angle, float distance)
-	{
+	public static Coord2D polarOffset(Coord2D position, float angle, float distance) {
 		float d0 = (float) (position.x + Math.cos(angle * Math.PI / 180.0D) * distance);
 		float d1 = (float) (position.z + Math.sin(angle * Math.PI / 180.0D) * distance);
 		return new Coord2D(d0,d1);
@@ -64,8 +61,7 @@ public class MathUtils {
 	 * @param rand - the Random, that will randomise this.
 	 * @return a random Double
 	 */
-	public static double randomDouble(Random rand)
-	{
+	public static double randomDouble(Random rand) {
 		return rand.nextDouble()-rand.nextDouble();
 	}
 
@@ -75,22 +71,33 @@ public class MathUtils {
 	 * @param rand - the Random, that will randomise this.
 	 * @return a random Float
 	 */
-	public static float randomFloat(Random rand)
-	{
+	public static float randomFloat(Random rand) {
 		return rand.nextFloat()-rand.nextFloat();
 	}
 
 	/**
-	 * Used to calculate difference between 2 float.
+	 * Used to calculate difference between 2 floats.
 	 * @version From DummyCore 1.0
 	 * @param pos1 - float #1
 	 * @param pos2 - float #2
 	 * @return always positive value of difference.
 	 */
-	public static float getDifference(float pos1, float pos2)
-	{
+	public static float getDifference(float pos1, float pos2) {
 		float diff = pos1-pos2;
-		return (float)module(diff);
+		return Math.abs(diff);
+	}
+
+
+	/**
+	 * Used to calculate difference between 2 doubles.
+	 * @version From DummyCore 1.0
+	 * @param pos1 - double #1
+	 * @param pos2 - double #2
+	 * @return always positive value of difference.
+	 */
+	public static double getDifference(double pos1, double pos2) {
+		double diff = pos1-pos2;
+		return Math.abs(diff);
 	}
 
 	/**
@@ -101,8 +108,7 @@ public class MathUtils {
 	 * @return int[2] with this 2 values swapped.
 	 */
 	@Deprecated
-	public static int[] swap(int a, int b)
-	{
+	public static int[] swap(int a, int b) {
 		return new int[]{b,a};
 	}
 
@@ -112,8 +118,7 @@ public class MathUtils {
 	 * @param a - the int to be converted
 	 * @return this integer, converted into hexadecimal
 	 */
-	public static int convertToHex(int a)
-	{
+	public static int convertToHex(int a) {
 		return Integer.parseInt(Integer.toString(a),16);
 	}
 
@@ -123,8 +128,8 @@ public class MathUtils {
 	 * @param a - the double to be converted
 	 * @return this double, but positive(>0)
 	 */
-	public static double module(double a)
-	{
+	@Deprecated
+	public static double module(double a) {
 		if(a < 0) a = -a;
 		return a;
 	}
@@ -135,9 +140,8 @@ public class MathUtils {
 	 * @param searched - the object we are searching for
 	 * @return true if the array already contains the given object, false otherwise
 	 */
-	public static boolean arrayContains(Object[] array, Object searched)
-	{
-		for (Object element : array) {
+	public static boolean arrayContains(Object[] array, Object searched) {
+		for(Object element : array) {
 			if(element.equals(searched))
 				return true;
 		}
@@ -150,8 +154,7 @@ public class MathUtils {
 	 * @param searched - the int we are searching for
 	 * @return true if the array already contains the given int, false otherwise
 	 */
-	public static boolean arrayContains(int[] array, int searched)
-	{
+	public static boolean arrayContains(int[] array, int searched) {
 		for (int element : array) {
 			if(element == searched)
 				return true;
@@ -165,10 +168,8 @@ public class MathUtils {
 	 * @param searched - the int we are searching for
 	 * @return Index of the searched param, -1 if the array has no searched param
 	 */
-	public static int getIntInArray(int[] array, int searched)
-	{
-		for(int i = 0; i < array.length; ++i)
-		{
+	public static int getIntInArray(int[] array, int searched) {
+		for(int i = 0; i < array.length; ++i) {
 			if(array[i] == searched)
 				return i;
 		}
@@ -180,15 +181,13 @@ public class MathUtils {
 	 * @param array the array
 	 * @return true if all booleans within the array are the same, false otherwise
 	 */
-	public static boolean isArrayTheSame(boolean[] array)
-	{
+	public static boolean isArrayTheSame(boolean[] array) {
 		boolean previous = array[0];
-		for (boolean element : array) {
-			if(element == previous)
-			{
+		for(boolean element : array) {
+			if(element == previous) {
 				previous = element;
-			}else
-			{
+			}
+			else {
 				return false;
 			}
 		}
@@ -196,8 +195,7 @@ public class MathUtils {
 	}
 
 	@SafeVarargs
-	public static <T extends Comparable<T>> T max(T...is)
-	{
+	public static <T extends Comparable<T>> T max(T...is) {
 		T mI = is.length == 0 ? null : is[0];
 
 		for(T i : is)
@@ -221,5 +219,33 @@ public class MathUtils {
 
 		ArrayList<T> lst = Lists.<T>newArrayList(elements);
 		return lst.size() == 0 ? null : lst.get(rnd.nextInt(lst.size()));
+	}
+
+	/**
+	 * Maps a value range to another value range.
+	 *
+	 * @param valueIn The value to map.
+	 * @param inMin   The minimum of the input value range.
+	 * @param inMax   The maximum of the input value range
+	 * @param outMin  The minimum of the output value range.
+	 * @param outMax  The maximum of the output value range.
+	 * @return The mapped value.
+	 */
+	public static float map(float valueIn, float inMin, float inMax, float outMin, float outMax) {
+		return (valueIn - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+	}
+
+	/**
+	 * Maps a value range to another value range.
+	 *
+	 * @param valueIn The value to map.
+	 * @param inMin   The minimum of the input value range.
+	 * @param inMax   The maximum of the input value range
+	 * @param outMin  The minimum of the output value range.
+	 * @param outMax  The maximum of the output value range.
+	 * @return The mapped value.
+	 */
+	public static double map(double valueIn, double inMin, double inMax, double outMin, double outMax) {
+		return (valueIn - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 	}
 }

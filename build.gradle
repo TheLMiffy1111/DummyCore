@@ -15,7 +15,7 @@ repositories {
     }
 }
 
-version = "2.4.112.4"
+version = "2.4.112.5"
 group= "DummyCore"
 archivesBaseName = "DummyCoreUnofficial"
 
@@ -25,7 +25,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.4.2758"
     runDir = "run"
     mappings = "snapshot_20170624"
     makeObfSourceJar = false
